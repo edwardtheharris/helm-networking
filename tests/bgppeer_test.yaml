@@ -3,26 +3,24 @@
 # ```
 # ---
 # Tests to validate the deployment of the described StatefulSet.
-suite: test for statefulset
+suite: test for bgp peer
 release:
   name: calico
 templates:
-  - templates/statefulset.yaml
+  - templates/bgppeer.yaml
 values:
   - ../values.yaml
 
 tests:
   - asserts:
       - isKind:
-          of: StatefulSet
+          of: BGPPeer
       - equal:
           path: metadata.name
-          value: calico
-    it: should be a StatefulSet
-    template: templates/statefulset.yaml
-    set:
-      nameOverride: calico
+          value: global-bgp-peer
+    it: should be a BGPPeer
+    template: templates/bgppeer.yaml
     documentSelector:
       path: kind
-      value: StatefulSet
+      value: BGPPeer
 
