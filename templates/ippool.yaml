@@ -1,0 +1,15 @@
+{{ if .Values.ippool.enabled }}
+apiVersion: crd.projectcalico.org/v1
+kind: IPPool
+metadata:
+  name: {{ .Values.ippool.name }}
+spec:
+  cidr: {{ .Values.ippool.cidr }}
+  ipipMode: CrossSubnet
+  natOutgoing: true
+  disabled: false
+  nodeSelector: all()
+  allowedUses:
+    - Workload
+    - Tunnel
+{{ end }}

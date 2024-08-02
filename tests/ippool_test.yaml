@@ -1,0 +1,26 @@
+###
+# ```{rubric} StatefulSet Test Suite
+# ```
+# ---
+# Tests to validate the deployment of the described StatefulSet.
+suite: test for ip pool
+release:
+  name: calico
+templates:
+  - templates/ippool.yaml
+values:
+  - ../values.yaml
+
+tests:
+  - asserts:
+      - isKind:
+          of: IPPool
+      - equal:
+          path: metadata.name
+          value: ip-pool
+    it: should be an IPPool
+    template: templates/ippool.yaml
+    documentSelector:
+      path: kind
+      value: IPPool
+
