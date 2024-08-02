@@ -1,9 +1,10 @@
+{{ if .Values.testing.enabled }}
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{ include "postgresql.fullname" . }}-test-connection"
+  name: "{{ .Values.nameOverride }}-test-connection"
   labels:
-    {{- include "postgresql.labels" . | nindent 4 }}
+    {{ .Values.podLabels }}
   annotations:
     "helm.sh/hook": test
 spec:
@@ -11,5 +12,6 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "postgresql.fullname" . }}:{{ .Values.service.port }}']
+      args: ['{{ .Values.nameOverride }}:{{ .Values.service.port }}']
   restartPolicy: Never
+{{ end }}
