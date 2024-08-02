@@ -1,0 +1,17 @@
+{{ if .Values.testing.enabled }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ .Values.nameOverride }}-test-connection"
+  labels:
+    {{ .Values.podLabels }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ .Values.nameOverride }}:{{ .Values.service.port }}']
+  restartPolicy: Never
+{{ end }}

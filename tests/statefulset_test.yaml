@@ -4,17 +4,25 @@
 # ---
 # Tests to validate the deployment of the described StatefulSet.
 suite: test for statefulset
+release:
+  name: calico
 templates:
-  - statefulset.yaml
+  - templates/statefulset.yaml
+values:
+  - ../values.yaml
+
 tests:
   - asserts:
       - isKind:
           of: StatefulSet
       - equal:
           path: metadata.name
-          pattern: postgres
+          value: calico
     it: should be a StatefulSet
+    template: templates/statefulset.yaml
     set:
-      postgresql:
-        name: postgres
+      nameOverride: calico
+    documentSelector:
+      path: kind
+      value: StatefulSet
 
