@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "972537352b74f263b59def8fe94c9088f5eee73d6677318c8b4f457fa8af3eea"
+            "sha256": "962db41af54a064654ea97dc79734eeb9e0c6cc611dc2492c45fb74478b7891d"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -47,13 +47,6 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==5.0.1"
-        },
-        "zerovm-sphinx-theme": {
-            "hashes": [
-                "sha256:e00b8179b1fe7d514599eea7546312f13f66eba57c3b3851afc6db9bc10272e2"
-            ],
-            "index": "pypi",
-            "version": "==1.1"
         }
     },
     "develop": {
