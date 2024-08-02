@@ -6,11 +6,14 @@ name = "pypi"
 [packages]
 loguru = "*"
 gitpython = "*"
+pipenv = "*"
 
 [dev-packages]
+"sphinxcontrib.autoyaml" = "*"
+myst-parser = {extras = ["linkify"], version = "*"}
 sphinx = "*"
 sphinx-autobuild = "*"
-myst-parser = {extras = ["linkify"], version = "*"}
-sphinx-design = "*"
-"sphinxcontrib.autoyaml" = "*"
 sphinx-book-theme = "*"
+sphinx-design = "*"
+sphinxemoji = "*"
+version-query = "*"

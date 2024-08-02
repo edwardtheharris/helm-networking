@@ -5,8 +5,8 @@ apiVersion: v2
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
 appVersion: "1.16.0"
-description: A Helm chart for Kubernetes
-icon: file://./assets/icon/postgresql.jpeg
+description: A Helm chart to deploy Calico resources to bare metal Kubernetes.
+icon: file://./_static/img/calico.png
 name: calico
 ###
 # A chart can be either an 'application' or a 'library' chart.
