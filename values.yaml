@@ -63,11 +63,6 @@ podLabels:
   app: calico
 podSecurityContext: {}
 # fsGroup: 2000
-calicoql:
-  database: calico
-  name: calico
-  password: calico
-  username: calico
 readinessProbe:
   exec:
     command:

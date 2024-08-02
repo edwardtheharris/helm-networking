@@ -14,6 +14,7 @@ spec:
       labels:
         calico.kubernetes.io/name: {{ .Values.nameOverride }}
         calico.kubernetes.io/instance: {{ .Release.Name }}
+      name: {{ .Values.nameOverride }}
     spec:
       containers:
         - name: postgres
