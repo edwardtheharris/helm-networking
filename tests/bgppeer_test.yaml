@@ -1,9 +1,9 @@
 ###
-# ```{rubric} StatefulSet Test Suite
+# ```{rubric} BGPPeer Test Suite
 # ```
 # ---
-# Tests to validate the deployment of the described StatefulSet.
-suite: test for bgp peer
+# Tests to validate the deployment of the described BGPPeer.
+suite: test suite for BGPPeer
 release:
   name: calico
 templates:
@@ -17,7 +17,7 @@ tests:
           of: BGPPeer
       - equal:
           path: metadata.name
-          value: global-bgp-peer
+          value: calico-global-bgp-peer
     it: should be a BGPPeer
     template: templates/bgppeer.yaml
     documentSelector:

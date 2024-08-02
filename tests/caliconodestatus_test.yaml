@@ -1,0 +1,25 @@
+###
+# ```{rubric} Calico Node Status Test Suite
+# ```
+# ---
+# Tests to validate the deployment of the described CalicoNodeStatus.
+suite: test suite for Calico Node Status object
+release:
+  name: calico
+templates:
+  - templates/caliconodestatus.yaml
+values:
+  - ../values.yaml
+
+tests:
+  - asserts:
+      - isKind:
+          of: CalicoNodeStatus
+      - equal:
+          path: metadata.name
+          value: calico-node-status
+    it: should be a CalicoNodeStatus
+    documentSelector:
+      path: kind
+      value: CalicoNodeStatus
+
