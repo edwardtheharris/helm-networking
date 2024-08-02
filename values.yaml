@@ -2,7 +2,6 @@
 # Default values for template.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-<<<<<<< Updated upstream:resources/values.yaml
 affinity:
   nodeAffinity:
   requiredDuringSchedulingIgnoredDuringExecution:
@@ -19,10 +18,10 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
-fullnameOverride: "postgres"
+fullnameOverride: "calico"
 image:
   pullPolicy: IfNotPresent
-  repository: postgres
+  repository: calico
   # Overrides the image tag whose default is the chart appVersion.
   tag: "16-alpine"
 
@@ -48,33 +47,28 @@ livenessProbe:
     command:
     - pg_isready
     - -U
-    - postgres
+    - calico
   failureThreshold: 3 # When to give up and restart the container
   initialDelaySeconds: 30 # Delay before the first probe is initiated
   periodSeconds: 10 # How often to perform the probe
   successThreshold: 1 # Minimum consecutive successes for the probe to be considered successful after having failed
   timeoutSeconds: 5 # When the probe times out
-nameOverride: "postgres"
+nameOverride: "calico"
 nodeSelector: {}
 persistence:
   size: 100Gi
   storageClass: local-storage
 podAnnotations: {}
 podLabels:
-  app: postgres
+  app: calico
 podSecurityContext: {}
 # fsGroup: 2000
-postgresql:
-  database: postgres
-  name: postgres
-  password: postgres
-  username: postgres
 readinessProbe:
   exec:
     command:
     - pg_isready
     - -U
-    - postgres
+    - calico
   failureThreshold: 3 # When to give up, marking the Pod as Unready
   initialDelaySeconds: 5 # Delay before the first probe is initiated, can be shorter than liveness probe
   periodSeconds: 5 # How often to perform the probe
@@ -107,12 +101,6 @@ securityContext: {}
 service:
   port: 5432
   type: ClusterIP
-=======
-bgp:
-  asNumber: 209
-  peerIP: 192.168.5.5
-  name: global-bgp-peer
->>>>>>> Stashed changes:values.yaml
 serviceAccount:
   # Annotations to add to the service account
   annotations: {}
@@ -122,15 +110,13 @@ serviceAccount:
   create: true
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-<<<<<<< Updated upstream:resources/values.yaml
-  name: "postgres"
+  name: "calico"
+testing:
+  enabled: false
 tolerations: []
 type: StatefulSet
 # Additional volumeMounts on the output Deployment definition.
-volumeMounts:
-- mountPath: "/mnt/k8s/psql"
-  name: data
-  readOnly: false
+volumeMounts: []
 # - name: foo
 #   mountPath: "/etc/foo"
 #   readOnly: true
@@ -143,8 +129,3 @@ volumes: []
 
 
 
-=======
-  name: "calico"
-testing:
-  enabled: false
->>>>>>> Stashed changes:values.yaml

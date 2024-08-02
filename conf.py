@@ -8,7 +8,14 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 """
 # pylint: disable=invalid-name,redefined-builtin
-import zerovm_sphinx_theme
+from pathlib import Path
+import version_query
+
+def get_release():
+    """Query the current release for the project."""
+    repo_path = Path('.')
+    ret_value = version_query.git_query.query_git_repo(repo_path).to_str()
+    return ret_value
 
 author = 'Xander Harris'
 autoyaml_root = "."
@@ -28,7 +35,7 @@ exclude_patterns = [
     '.venv/*',
     '.tmp/*',
     '.pytest_cache/*',
-    'resources/templates/NOTES.txt',
+    'templates/NOTES.txt',
 ]
 
 extensions = [
@@ -39,17 +46,17 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.intersphinx',
     'sphinxcontrib.autoyaml',
+    'sphinxemoji.sphinxemoji',
 ]
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-# html_logo = '_static/img/hr-logo.svg'
-# html_favicon = '_static/img/hr-logo.svg'
+html_logo = '_static/img/calico.png'
+html_favicon = '_static/img/calico.png'
 html_static_path = ['_static']
-html_theme = 'zerovm'
-html_theme_path = [zerovm_sphinx_theme.theme_path]
-myst_dmath_double_inline=True
+html_theme = 'sphinx_book_theme'
+myst_dmath_double_inline = True
 myst_enable_extensions = [
     "amsmath",
     "attrs_block",
@@ -68,12 +75,12 @@ myst_enable_extensions = [
     "tasklist",
 ]
 myst_title_to_header = True
-project = 'Generic Helm Chart'
+project = 'PostgreSQL Helm Chart'
 rst_epilog = """
 .. sectionauthor:: Xander Harris <xandertheharris@gmail.com>
 """
 release = '0.0.1'
-show_authors=True
+show_authors = True
 source_suffix = {
     '.md': 'markdown',
     '.rst': 'restructuredtext',
