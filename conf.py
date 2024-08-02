@@ -52,8 +52,8 @@ extensions = [
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_logo = '_static/img/postgresql.png'
-html_favicon = '_static/img/postgresql.png'
+html_logo = '_static/img/calico.png'
+html_favicon = '_static/img/calico.png'
 html_static_path = ['_static']
 html_theme = 'sphinx_book_theme'
 myst_dmath_double_inline = True

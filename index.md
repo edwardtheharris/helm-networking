@@ -5,24 +5,19 @@ abstract: >-
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 authors: Xander Harris
-date: 2024-04-28
-title: Template Helm Chart
+date: 2024-08-02
+title: Calico Networking Helm Chart
 ---
 
 ## Repository Contents
 
-```{toctree}
-:maxdepth: 2
-
-manifests/index
-resources/index
-workflows/index
+```{contents}
 ```
 
-### Meta Contents
-
 ```{toctree}
-cicd
+:caption: meta
+
+.github/index
 license
 readme
 security
@@ -33,3 +28,27 @@ security
 * {ref}`genindex`
 * {ref}`modindex`
 * {ref}`search`
+
+```{include} readme.md
+```
+
+### Chart
+
+```{autoyaml} Chart.yaml
+```
+
+### Values
+
+```{autoyaml} values.yaml
+```
+
+```{glossary}
+BGP
+   Border Gateway Protocol is a network routing protocol that operates at
+   Layer 3 of the OSI model of the Internet. More information is available
+   [here](https://en.wikipedia.org/wiki/Border_Gateway_Protocol). You may
+   also find [BGP Tools](https://bgp.tools) handy.
+```
+
+```{sectionauthor} Xander Harris <xandertheharris@gmail.com>
+```
