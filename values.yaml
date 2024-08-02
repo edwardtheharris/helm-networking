@@ -4,8 +4,13 @@
 # Declare variables to be passed into your templates.
 bgp:
   asNumber: 209
+  enabled: true
   name: global-bgp-peer
   peerIP: 192.168.5.5
+ippool:
+  cidr: 10.0.0.0/8
+  enabled: true
+  name: ip-pool
 nameOverride: "calico"
 serviceAccount:
   # Annotations to add to the service account

@@ -1,4 +1,4 @@
----
+{{ if .Values.bgp.enabled }}
 apiVersion: crd.projectcalico.org/v1
 kind: BGPPeer
 metadata:
@@ -6,3 +6,4 @@ metadata:
 spec:
   peerIP: {{ .Values.bgp.peerIP }}
   asNumber: {{ .Values.bgp.asNumber }}
+{{ end }}
