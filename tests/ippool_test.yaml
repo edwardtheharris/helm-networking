@@ -3,23 +3,39 @@
 # ```
 # ---
 # Tests to validate the deployment of the described IPPool.
+#
+# ```{literalinclude} /tests/ippool_test.yaml
+# :language: yaml
+# :start-at: "suite: test suite for IPPool\n"
+# :end-before: "###\n"
+# ```
 suite: test suite for IPPool
 release:
   name: calico
 templates:
-  - templates/ippool.yaml
+- templates/ippool.yaml
 values:
-  - ../values.yaml
+- ../values.yaml
 
+###
+# ```{rubric} IPPool Tests
+# ```
+# ---
+# Tests validate the deployment of the described IPPool.
+#
+# ```{literalinclude} /tests/ippool_test.yaml
+# :language: yaml
+# :start-at: "tests:\n"
+# ```
 tests:
-  - asserts:
-      - isKind:
-          of: IPPool
-      - equal:
-          path: metadata.name
-          value: calico-ip-pool
-    it: should be an IPPool
-    template: templates/ippool.yaml
-    documentSelector:
-      path: kind
-      value: IPPool
+- asserts:
+  - isKind:
+      of: IPPool
+  - equal:
+      path: metadata.name
+      value: calico-ip-pool
+  it: should be an IPPool
+  template: templates/ippool.yaml
+  documentSelector:
+    path: kind
+    value: IPPool
