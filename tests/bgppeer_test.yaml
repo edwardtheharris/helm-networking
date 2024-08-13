@@ -2,25 +2,41 @@
 # ```{rubric} BGPPeer Test Suite
 # ```
 # ---
-# Tests to validate the deployment of the described BGPPeer.
+# Test suite to validate the deployment of the described BGPPeer.
+#
+# ```{literalinclude} /tests/bgppeer_test.yaml
+# :language: yaml
+# :start-at: "suite: test suite for BGPPeer\n"
+# :end-before: "###\n"
+# ```
 suite: test suite for BGPPeer
 release:
   name: calico
 templates:
-  - templates/bgppeer.yaml
+- templates/bgppeer.yaml
 values:
-  - ../values.yaml
+- ../values.yaml
 
+###
+# ```{rubric} BGPPeer Tests
+# ```
+# ---
+# Tests validate the deployment of the described BGPPeer.
+#
+# ```{literalinclude} /tests/bgppeer_test.yaml
+# :language: yaml
+# :start-at: "tests:\n"
+# ```
 tests:
-  - asserts:
-      - isKind:
-          of: BGPPeer
-      - equal:
-          path: metadata.name
-          value: calico-global-bgp-peer
-    it: should be a BGPPeer
-    template: templates/bgppeer.yaml
-    documentSelector:
-      path: kind
-      value: BGPPeer
+- asserts:
+  - isKind:
+      of: BGPPeer
+  - equal:
+      path: metadata.name
+      value: calico-global-bgp-peer
+  it: should be a BGPPeer
+  template: templates/bgppeer.yaml
+  documentSelector:
+    path: kind
+    value: BGPPeer
 

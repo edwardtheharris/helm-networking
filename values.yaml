@@ -1,20 +1,83 @@
 ###
+# ```{rubric} Calico Values File
+# ```
+# ---
 # Default values for template.
+#
 # This is a YAML-formatted file.
+#
 # Declare variables to be passed into your templates.
+#
+# ```{rubric} BGP
+# ```
+# ---
+# Use this section to configure BGP.
+#
+# ```{literalinclude} /values.yaml
+# :language: yaml
+# :start-at: "bgp:\n"
+# :end-before: "###\n"
+# ```
 bgp:
   asNumber: 209
   enabled: true
   name: calico-global-bgp-peer
-  peerIP: 192.168.5.5
+  peerIP: 192.168.5.30
+
+###
+# ```{rubric} IP Pool
+# ```
+# ---
+# Define IP pool objects here.
+#
+# ```{literalinclude} /values.yaml
+# :language: yaml
+# :start-at: "ippool:\n"
+# :end-before: "###\n"
+# ```
 ippool:
   cidr: 10.0.0.0/8
   enabled: true
   name: calico-ip-pool
+
+###
+# ```{rubric} Override Release Name
+# ```
+# ---
+# Use this section to configure BGP.
+#
+# ```{literalinclude} /values.yaml
+# :language: yaml
+# :start-at: "nameOverride: \"calico\""
+# :end-before: "###\n"
+# ```
 nameOverride: "calico"
+
+###
+# ```{rubric} Status
+# ```
+# ---
+# Use this section to configure status checks.
+#
+# ```{literalinclude} /values.yaml
+# :language: yaml
+# :start-at: "status:\n"
+# :end-before: "###\n"
+# ```
 status:
   enabled: true
   name: calico-node-status
   node: kcp01.breeze-blocks.net
+
+###
+# ```{rubric} Testing
+# ```
+# ---
+# Configure and enable testing.
+#
+# ```{literalinclude} /values.yaml
+# :language: yaml
+# :start-at: "testing:\n"
+# ```
 testing:
   enabled: false
