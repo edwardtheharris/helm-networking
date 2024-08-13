@@ -12,23 +12,25 @@
 #
 # ```{literalinclude} /.github/dependabot.yml
 # :language: yaml
-# :start-at: "version: 2\n"
+# :start-at: "updates:\n"
+# :end-before: "###\n"
 # ```
 updates:
-  - directory: "/"
-    package-ecosystem: "pip"
-    schedule:
-      interval: "weekly"
-    ###
-    # Location of package manifests
-    #
-    # - `"/"`
-  - directory: "resources/"
+- directory: "/"
+  package-ecosystem: "pip"
+  schedule:
+    interval: "weekly"
+
     ###
     # See documentation for possible values
     #
-    # - `"docker"`
-    package-ecosystem: "docker"
-    schedule:
-      interval: "weekly"
+    # ```{literalinclude} /.github/dependabot.yml
+    # :language: yaml
+    # :start-at: "directory: \"resources/\"\n"
+    # :end-before: "version: 2\n"
+    # ```
+- directory: "resources/"
+  package-ecosystem: "docker"
+  schedule:
+    interval: "weekly"
 version: 2
