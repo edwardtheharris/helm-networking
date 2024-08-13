@@ -9,6 +9,10 @@ date: 2024-04-02
 title: Readme
 ---
 
+[![CodeQL](https://github.com/edwardtheharris/helm-calico/actions/workflows/codeql.yml/badge.svg)](https://github.com/edwardtheharris/helm-calico/actions/workflows/codeql.yml)
+[![OSSAR](https://github.com/edwardtheharris/helm-calico/actions/workflows/ossar.yml/badge.svg)](https://github.com/edwardtheharris/helm-calico/actions/workflows/ossar.yml)
+[![Test Helm Chart](https://github.com/edwardtheharris/helm-calico/actions/workflows/helm.yml/badge.svg)](https://github.com/edwardtheharris/helm-calico/actions/workflows/helm.yml)
+[![Test, Build, Deploy to GitHub Pages](https://github.com/edwardtheharris/helm-calico/actions/workflows/pages.yml/badge.svg)](https://github.com/edwardtheharris/helm-calico/actions/workflows/pages.yml)
 [![wakatime](https://wakatime.com/badge/github/edwardtheharris/helm-calico.svg)](https://wakatime.com/badge/github/edwardtheharris/helm-calico)
 
 This chart deploys Calico networking resources to an existing K8S cluster.

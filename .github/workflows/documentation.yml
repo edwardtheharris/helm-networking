@@ -4,14 +4,14 @@
 # ---
 # This is a basic workflow to help you get started with Actions.
 #
-# ```{literalinclude} /.github/workflows/pages.yml
+# ```{literalinclude} /.github/workflows/documentation.yml
 # :language: yaml
-# :start-at: "name: Test, Build, Deploy to GitHub Pages\n"
+# :start-at: "name: Documentation\n"
 # :end-before: "###\n"
 # ```
 #
 # Set a name for the workflow.
-name: Test, Build, Deploy to GitHub Pages
+name: Documentation
 on:
   pull_request:
     branches: ["main"]
@@ -22,9 +22,10 @@ on:
 ###
 # ```{rubric} Permissions Updates
 # ```
+# ---
 # Enable read for contents and issues, and write for checks and PRs.
 #
-# ```{literalinclude} /.github/workflows/pages.yml
+# ```{literalinclude} /.github/workflows/documentation.yml
 # :language: yaml
 # :start-at: "permissions:\n"
 # :end-before: "###\n"
@@ -49,7 +50,7 @@ jobs:
   # ---
   # Check that the markdown in this repo is up to our (arbitrary) standards.
   #
-  # ```{literalinclude} /.github/workflows/pages.yml
+  # ```{literalinclude} /.github/workflows/documentation.yml
   # :language: yaml
   # :start-at: "markdownlint:\n"
   # :end-before: "###\n"
@@ -71,13 +72,14 @@ jobs:
           check_name: markdownlint
           comment_title: "Markdown Lint"
           files: markdownlint-cli2-junit.xml
+
   ###
   # ```{rubric} Build GitHub Pages Site
   # ```
   # ---
   # Build the pages site using Sphinx and upload the resulting artifact.
   #
-  # ```{literalinclude} /.github/workflows/pages.yml
+  # ```{literalinclude} /.github/workflows/documentation.yml
   # :language: yaml
   # :start-at: "  build:\n"
   # :end-before: "###\n"
@@ -107,13 +109,14 @@ jobs:
         uses: actions/upload-pages-artifact@main
         with:
           path: './deploy'
+
   ###
   # ```{rubric} Deploy the Pages site
   # ```
   # ---
   # Download the artifact and deploy to pages.
   #
-  # ```{literalinclude} /.github/workflows/pages.yml
+  # ```{literalinclude} /.github/workflows/documentation.yml
   # :language: yaml
   # :start-at: "  pages:\n"
   # ```

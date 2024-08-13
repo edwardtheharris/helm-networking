@@ -16,6 +16,11 @@ This repository uses the following GitHub Actions Workflows.
 ```{autoyaml} .github/workflows/codeql.yml
 ```
 
+### Documentation Workflow
+
+```{autoyaml} .github/workflows/documentation.yml
+```
+
 ### Helm Workflow
 
 ```{autoyaml} .github/workflows/helm.yml
@@ -24,11 +29,6 @@ This repository uses the following GitHub Actions Workflows.
 ### OSSAR Workflow
 
 ```{autoyaml} .github/workflows/ossar.yml
-```
-
-### Pages Workflow
-
-```{autoyaml} .github/workflows/pages.yml
 ```
 
 ## Dependabot Settings
