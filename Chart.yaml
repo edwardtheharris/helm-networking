@@ -31,6 +31,26 @@ apiVersion: v2
 appVersion: "3.28"
 
 ###
+# ```{rubric} Dependencies
+# ```
+# ---
+# A brief description of the Chart.
+#
+# ```{literalinclude} /Chart.yaml
+# :language: yaml
+# :start-at: "dependencies:\n"
+# :end-before: "###\n"
+# ```
+dependencies:
+- condition: haproxy.enabled
+  name: haproxy
+  repository: https://haproxytech.github.io/helm-charts
+  version: 1.22.0
+- name: kubernetes-ingress
+  repository: https://haproxytech.github.io/helm-charts
+  version: 1.41.0
+
+###
 # ```{rubric} Description
 # ```
 # ---

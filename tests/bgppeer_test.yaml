@@ -28,15 +28,47 @@ values:
 # :start-at: "tests:\n"
 # ```
 tests:
-- asserts:
+- it: should be a BGPPeer at index 0
+  asserts:
   - isKind:
       of: BGPPeer
   - equal:
       path: metadata.name
       value: calico-global-bgp-peer
-  it: should be a BGPPeer
+  - equal:
+      path: spec
+      value:
+        peerIP: 192.168.5.30
+        asNumber: 209
   template: templates/bgppeer.yaml
-  documentSelector:
-    path: kind
-    value: BGPPeer
-
+  documentIndex: 0
+- it: should be a BGPPeer at index 1
+  asserts:
+  - isKind:
+      of: BGPPeer
+  - equal:
+      path: metadata.name
+      value: hap01
+  - equal:
+      path: spec
+      value:
+        peerIP: 192.168.5.40
+        asNumber: 65000
+  template: templates/bgppeer.yaml
+  documentIndex: 2
+- it: should be a BGPPeer at index 2
+  asserts:
+  - isKind:
+      of: BGPPeer
+  - equal:
+      path: metadata
+      value:
+        name: hap02
+        namespace: kube-system
+  - equal:
+      path: spec
+      value:
+        peerIP: 192.168.5.50
+        asNumber: 65000
+  template: templates/bgppeer.yaml
+  documentIndex: 3
