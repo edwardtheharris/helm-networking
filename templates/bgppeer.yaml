@@ -7,3 +7,33 @@ spec:
   peerIP: {{ .Values.bgp.peerIP }}
   asNumber: {{ .Values.bgp.asNumber }}
 {{ end }}
+---
+apiVersion: projectcalico.org/v1
+kind: BGPConfiguration
+metadata:
+  name: default
+  namespace: kube-system
+spec:
+  logSeverityScreen: Info
+  nodeToNodeMeshEnabled: true
+  asNumber: 65000
+---
+# ingress controller server
+apiVersion: projectcalico.org/v1
+kind: BGPPeer
+metadata:
+  name: hap01
+  namespace: kube-system
+spec:
+  peerIP: 192.168.5.40
+  asNumber: 65000
+---
+# ingress controller server
+apiVersion: projectcalico.org/v1
+kind: BGPPeer
+metadata:
+  name: hap02
+  namespace: kube-system
+spec:
+  peerIP: 192.168.5.50
+  asNumber: 65000

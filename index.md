@@ -16,6 +16,11 @@ title: Calico Networking Helm Chart
 ```{contents}
 ```
 
+### Dependencies
+
+- [haproxy](https://artifacthub.io/packages/helm/haproxytech/haproxy)
+- [kubernetes-ingress](https://artifacthub.io/packages/helm/haproxytech/kubernetes-ingress)
+
 ```{toctree}
 :caption: contents
 

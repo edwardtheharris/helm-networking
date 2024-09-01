@@ -25,6 +25,28 @@ bgp:
   peerIP: 192.168.5.30
 
 ###
+# ```{rubric} HAProxy
+# ```
+# ---
+# Enable and configure HAProxy.
+#
+# ```{literalinclude} /values.yaml
+# :language: yaml
+# :start-at: "haproxy:\n"
+# :end-before: "###\n"
+# ```
+haproxy:
+  enabled: true
+  controller:
+  kind: DaemonSet
+  ingressClass: haproxy
+  service:
+    type: LoadBalancer
+    annotations:
+      haproxy.org/standalone-backend: "true"
+      service.beta.kubernetes.io/load-balancer-internal: 192.168.5.40/24
+
+###
 # ```{rubric} IP Pool
 # ```
 # ---

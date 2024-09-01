@@ -93,6 +93,7 @@ jobs:
       - uses: actions/checkout@main
       - run: helm plugin install https://github.com/helm-unittest/helm-unittest
       - run: helm repo add lvm https://helm.metal-stack.io
+      - run: helm repo add haproxtech https://haproxytech.github.io/helm-charts
       - run: helm dependency build .
       - run: helm dependency update .
       - run: helm unittest -d -f 'tests/*.yaml' .
