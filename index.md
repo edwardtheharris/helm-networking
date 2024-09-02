@@ -24,6 +24,7 @@ title: Calico Networking Helm Chart
 ```{toctree}
 :caption: contents
 
+haproxy/index
 tests/index
 ```
 
@@ -69,6 +70,11 @@ calicoctl
    It is used to manage Calico policies and configuration, as well as view
    detailed cluster status. More information is available
    [here](https://docs.tigera.io/calico/latest/operations/calicoctl/install).
+
+external-mode
+   The haproxy chart can be deployed to support an existing external load
+   balancer using the information available
+   [here](https://www.haproxy.com/documentation/kubernetes-ingress/community/installation/external-mode-on-premises/).
 
 haproxy-ingress
    This is an ingress controller that deploys HAProxy to some or all of the
