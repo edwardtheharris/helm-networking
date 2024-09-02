@@ -46,6 +46,10 @@ dependencies:
   name: haproxy
   repository: https://haproxytech.github.io/helm-charts
   version: 1.22.0
+- condition: haproxy-ingress.enabled
+  name: haproxy-ingress
+  repository: https://haproxy-ingress.github.io/charts
+  version: 0.14.7
 - name: kubernetes-ingress
   repository: https://haproxytech.github.io/helm-charts
   version: 1.41.0

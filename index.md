@@ -38,9 +38,9 @@ security
 
 ## Indices and tables
 
-* {ref}`genindex`
-* {ref}`modindex`
-* {ref}`search`
+- {ref}`genindex`
+- {ref}`modindex`
+- {ref}`search`
 
 ```{include} readme.md
 ```
@@ -69,6 +69,13 @@ calicoctl
    It is used to manage Calico policies and configuration, as well as view
    detailed cluster status. More information is available
    [here](https://docs.tigera.io/calico/latest/operations/calicoctl/install).
+
+haproxy-ingress
+   This is an ingress controller that deploys HAProxy to some or all of the
+   nodes in a cluster and uses the in-cluster service to manage load balancing.
+   More information is available
+   [here](https://haproxy-ingress.github.io/). Note that this does not
+   integrate with existing external HAProxy resources.
 
 kubectl
    Kubernetes provides a command line tool for communicating with a Kubernetes

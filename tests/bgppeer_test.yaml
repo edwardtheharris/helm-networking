@@ -38,8 +38,9 @@ tests:
   - equal:
       path: spec
       value:
-        peerIP: 192.168.5.30
         asNumber: 209
+        nodeToNodeMeshEnabled: true
+        peerIP: 192.168.5.5
   template: templates/bgppeer.yaml
   documentIndex: 0
 - it: should be a BGPPeer at index 1
@@ -53,9 +54,10 @@ tests:
       path: spec
       value:
         peerIP: 192.168.5.40
+        nodeToNodeMeshEnabled: true
         asNumber: 65000
   template: templates/bgppeer.yaml
-  documentIndex: 2
+  documentIndex: 1
 - it: should be a BGPPeer at index 2
   asserts:
   - isKind:
@@ -64,11 +66,11 @@ tests:
       path: metadata
       value:
         name: hap02
-        namespace: kube-system
   - equal:
       path: spec
       value:
         peerIP: 192.168.5.50
+        nodeToNodeMeshEnabled: true
         asNumber: 65000
   template: templates/bgppeer.yaml
-  documentIndex: 3
+  documentIndex: 2

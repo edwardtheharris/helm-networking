@@ -2,8 +2,11 @@ dependencies:
 - name: haproxy
   repository: https://haproxytech.github.io/helm-charts
   version: 1.22.0
+- name: haproxy-ingress
+  repository: https://haproxy-ingress.github.io/charts
+  version: 0.14.7
 - name: kubernetes-ingress
   repository: https://haproxytech.github.io/helm-charts
   version: 1.41.0
-digest: sha256:2e2d2dc450eb3798215d18d2b2669f445030317d1161935bfb2bc42ef667188c
-generated: "2024-08-31T18:05:26.618314967-07:00"
+digest: sha256:5da557f87a5fc76fce0ded6c7b97b2dcd35a5f652962d261b2135ed370ca53b1
+generated: "2024-09-02T13:21:13.668412402-07:00"
