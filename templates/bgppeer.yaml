@@ -1,39 +1,23 @@
 {{ if .Values.bgp.enabled }}
+{{- range $.Values.bgp.peers }}
+---
 apiVersion: crd.projectcalico.org/v1
 kind: BGPPeer
 metadata:
-  name: {{ .Values.bgp.name }}
+  name: {{ .name }}
 spec:
-  peerIP: {{ .Values.bgp.peerIP }}
-  asNumber: {{ .Values.bgp.asNumber }}
+  peerIP: {{ .peerIP }}
+  asNumber: {{ .asNumber }}
+  nodeToNodeMeshEnabled: {{ .enableNodeToNodeMesh }}
+{{ end }}
 {{ end }}
 ---
-apiVersion: projectcalico.org/v1
+apiVersion: crd.projectcalico.org/v1
 kind: BGPConfiguration
 metadata:
   name: default
-  namespace: kube-system
 spec:
   logSeverityScreen: Info
   nodeToNodeMeshEnabled: true
-  asNumber: 65000
----
-# ingress controller server
-apiVersion: projectcalico.org/v1
-kind: BGPPeer
-metadata:
-  name: hap01
-  namespace: kube-system
-spec:
-  peerIP: 192.168.5.40
-  asNumber: 65000
----
-# ingress controller server
-apiVersion: projectcalico.org/v1
-kind: BGPPeer
-metadata:
-  name: hap02
-  namespace: kube-system
-spec:
-  peerIP: 192.168.5.50
+  peerIP: 192.168.5.5
   asNumber: 65000

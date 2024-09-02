@@ -19,10 +19,20 @@
 # :end-before: "###\n"
 # ```
 bgp:
-  asNumber: 209
+  peers:
+  - name: calico-global-bgp-peer
+    peerIP: 192.168.5.5
+    asNumber: 209
+    enableNodeToNodeMesh: true
+  - name: hap01
+    peerIP: 192.168.5.40
+    asNumber: 65000
+    enableNodeToNodeMesh: true
+  - name: hap02
+    peerIP: 192.168.5.50
+    asNumber: 65000
+    enableNodeToNodeMesh: true
   enabled: true
-  name: calico-global-bgp-peer
-  peerIP: 192.168.5.30
 
 ###
 # ```{rubric} HAProxy
@@ -38,13 +48,35 @@ bgp:
 haproxy:
   enabled: true
   controller:
-  kind: DaemonSet
-  ingressClass: haproxy
-  service:
-    type: LoadBalancer
-    annotations:
-      haproxy.org/standalone-backend: "true"
-      service.beta.kubernetes.io/load-balancer-internal: 192.168.5.40/24
+    kind: DaemonSet
+    ingressClass: haproxy
+    service:
+      type: LoadBalancer
+      annotations:
+        haproxy.org/standalone-backend: "true"
+        service.beta.kubernetes.io/load-balancer-internal: 192.168.5.40/24
+
+###
+# ```{rubric} HAProxy Ingress
+# ```
+# ---
+# Enable and configure {term}`haproxy-ingress`.
+#
+# This is an in-cluster ingress controller, it does not integrate with external
+# load balancers.
+#
+# ```{literalinclude} /values.yaml
+# :language: yaml
+# :start-at: "haproxy-ingress:\n"
+# :end-before: "###\n"
+# ```
+haproxy-ingress:
+  enabled: false
+  # Expose HAProxy via a service loadbalancer
+  controller:
+    ingressClass: haproxy-ingress
+    ingressClassResource:
+      enabled: true
 
 ###
 # ```{rubric} IP Pool
