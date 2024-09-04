@@ -71,3 +71,58 @@ This can be done in the usual way.
 ```shell
 helm -n calico-system uninstall calico
 ```
+
+## Calico
+
+The recommended method for installing Calico for networking is with the
+[Tigera Operator](https://docs.tigera.io/calico/latest/getting-started/kubernetes/self-managed-onprem/onpremises).
+
+1. Install the operator.
+
+   ```{code-block} shell
+   kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.2/manifests/tigera-operator.yaml
+   ```
+
+   Success looks like this.
+
+   ```{code-block} shell
+   namespace/tigera-operator created
+   customresourcedefinition.apiextensions.k8s.io/bgpconfigurations.crd.projectcalico.org created
+   customresourcedefinition.apiextensions.k8s.io/bgpfilters.crd.projectcalico.org created
+   customresourcedefinition.apiextensions.k8s.io/bgppeers.crd.projectcalico.org created
+   customresourcedefinition.apiextensions.k8s.io/blockaffinities.crd.projectcalico.org created
+   customresourcedefinition.apiextensions.k8s.io/caliconodestatuses.crd.projectcalico.org created
+   customresourcedefinition.apiextensions.k8s.io/clusterinformations.crd.projectcalico.org created
+   customresourcedefinition.apiextensions.k8s.io/felixconfigurations.crd.projectcalico.org created
+   customresourcedefinition.apiextensions.k8s.io/globalnetworkpolicies.crd.projectcalico.org created
+   customresourcedefinition.apiextensions.k8s.io/globalnetworksets.crd.projectcalico.org created
+   customresourcedefinition.apiextensions.k8s.io/hostendpoints.crd.projectcalico.org created
+   customresourcedefinition.apiextensions.k8s.io/ipamblocks.crd.projectcalico.org created
+   customresourcedefinition.apiextensions.k8s.io/ipamconfigs.crd.projectcalico.org created
+   customresourcedefinition.apiextensions.k8s.io/ipamhandles.crd.projectcalico.org created
+   customresourcedefinition.apiextensions.k8s.io/ippools.crd.projectcalico.org created
+   customresourcedefinition.apiextensions.k8s.io/ipreservations.crd.projectcalico.org created
+   customresourcedefinition.apiextensions.k8s.io/kubecontrollersconfigurations.crd.projectcalico.org created
+   customresourcedefinition.apiextensions.k8s.io/networkpolicies.crd.projectcalico.org created
+   customresourcedefinition.apiextensions.k8s.io/networksets.crd.projectcalico.org created
+   customresourcedefinition.apiextensions.k8s.io/apiservers.operator.tigera.io created
+   customresourcedefinition.apiextensions.k8s.io/imagesets.operator.tigera.io created
+   customresourcedefinition.apiextensions.k8s.io/installations.operator.tigera.io created
+   customresourcedefinition.apiextensions.k8s.io/tigerastatuses.operator.tigera.io created
+   serviceaccount/tigera-operator created
+   clusterrole.rbac.authorization.k8s.io/tigera-operator created
+   clusterrolebinding.rbac.authorization.k8s.io/tigera-operator created
+   deployment.apps/tigera-operator created
+   ```
+
+2. Download custom resources.
+
+   ```{code-block} shell
+   curl https://raw.githubusercontent.com/projectcalico/calico/v3.28.2/manifests/custom-resources.yaml -O
+   ```
+
+3. Install custom resources.
+
+   ```{code-block} shell
+   kubectl create -f custom-resources.yaml
+   ```
