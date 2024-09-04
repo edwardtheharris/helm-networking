@@ -1,0 +1,53 @@
+###
+# ```{rubric} Installation
+# ```
+# ---
+# This section includes base Calico installation configuration.
+#
+# For more information, see [here](https://upto.site/54a32)
+#
+# ```{admonition} create not apply
+# Don't be dumb like the author and make
+# [this mistake](https://upto.site/a5005).
+# ```
+#
+# ```{literalinclude} /crds/lb.yaml
+# :language: yaml
+# :start-at: "apiVersion: operator.tigera.io/v1\n"
+# :end-before: "---\n"
+# ```
+apiVersion: operator.tigera.io/v1
+kind: Installation
+metadata:
+  name: calico
+  namespace: calico-system
+spec:
+  # Configures Calico networking.
+  calicoNetwork:
+    bgp: Enabled
+    # Note: The ipPools section cannot be modified post-install.
+    ipPools:
+    - blockSize: 26
+      cidr: 10.0.0.0/8
+      encapsulation: VXLANCrossSubnet
+      natOutgoing: Enabled
+      nodeSelector: all()
+---
+###
+# ```{rubric} APIServer
+# ```
+# ---
+# This section configures the Calico API server.
+#
+# For more information, see [here](https://upto.site/5cb0d).
+#
+# ```{literalinclude} /crds/lb.yaml
+# :language: yaml
+# :lines: 48-
+# ```
+apiVersion: operator.tigera.io/v1
+kind: APIServer
+metadata:
+  name: calico
+  namespace: calico-system
+spec: {}

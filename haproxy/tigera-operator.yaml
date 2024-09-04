@@ -1,106 +1,34 @@
 ###
-# ```{rubric} PodDisruptionBudget
+# ```{rubric} Namespace
 # ```
 # ---
-# Source: calico/templates/calico-kube-controllers.yaml
+# This creates the `tigera-operator` namespace.
 #
-# This manifest creates a Pod Disruption Budget for Controller to allow K8s
-# Cluster Autoscaler to evict
-#
-# ```{literalinclude} /crds/calico.yaml
+# ```{literalinclude} /crds/tigera-operator.yaml
 # :language: yaml
-# :start-at: "apiVersion: policy/v1\n"
+# :start-at: "apiVersion: v1\n"
 # :end-before: "---\n"
 # ```
-apiVersion: policy/v1
-kind: PodDisruptionBudget
+apiVersion: v1
+kind: Namespace
 metadata:
-  name: calico-kube-controllers
-  namespace: kube-system
+  name: tigera-operator
   labels:
-    k8s-app: calico-kube-controllers
-spec:
-  maxUnavailable: 1
-  selector:
-    matchLabels:
-      k8s-app: calico-kube-controllers
+    name: tigera-operator
+    pod-security.kubernetes.io/enforce: privileged
 ---
-# Source: calico/templates/calico-kube-controllers.yaml
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: calico-kube-controllers
-  namespace: kube-system
----
-# Source: calico/templates/calico-node.yaml
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: calico-node
-  namespace: kube-system
----
-# Source: calico/templates/calico-node.yaml
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: calico-cni-plugin
-  namespace: kube-system
----
-# Source: calico/templates/calico-config.yaml
-# This ConfigMap is used to configure a self-hosted Calico installation.
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: calico-config
-  namespace: kube-system
-data:
-  # Typha is disabled.
-  typha_service_name: "none"
-  # Configure the backend to use.
-  calico_backend: "bird"
-
-  # Configure the MTU to use for workload interfaces and tunnels.
-  # By default, MTU is auto-detected, and explicitly setting this field should not be required.
-  # You can override auto-detection by providing a non-zero value.
-  veth_mtu: "0"
-
-  # The CNI network configuration to install on each node. The special
-  # values in this config will be automatically populated.
-  cni_network_config: |-
-    {
-      "name": "k8s-pod-network",
-      "cniVersion": "0.3.1",
-      "plugins": [
-        {
-          "type": "calico",
-          "log_level": "info",
-          "log_file_path": "/var/log/calico/cni/cni.log",
-          "datastore_type": "kubernetes",
-          "nodename": "__KUBERNETES_NODE_NAME__",
-          "mtu": __CNI_MTU__,
-          "ipam": {
-              "type": "calico-ipam"
-          },
-          "policy": {
-              "type": "k8s"
-          },
-          "kubernetes": {
-              "kubeconfig": "__KUBECONFIG_FILEPATH__"
-          }
-        },
-        {
-          "type": "portmap",
-          "snat": true,
-          "capabilities": {"portMappings": true}
-        },
-        {
-          "type": "bandwidth",
-          "capabilities": {"bandwidth": true}
-        }
-      ]
-    }
----
-# Source: calico/templates/kdd-crds.yaml
+###
+# ```{rubric} CustomResourceDefinition
+# ```
+# ---
+# This resource defines the custom resources used by the tigera operator.
+#
+# Source: crds/calico/crd.projectcalico.org_bgpconfigurations.yaml
+#
+# ```{literalinclude} /crds/tigera-operator.yaml
+# :language: yaml
+# :start-at: "apiVersion: apiextensions.k8s.io/v1\n"
+# ```
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -242,8 +170,9 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
+
 ---
-# Source: calico/templates/kdd-crds.yaml
+# Source: crds/calico/crd.projectcalico.org_bgpfilters.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -360,8 +289,9 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
+
 ---
-# Source: calico/templates/kdd-crds.yaml
+# Source: crds/calico/crd.projectcalico.org_bgppeers.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -460,8 +390,9 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
+
 ---
-# Source: calico/templates/kdd-crds.yaml
+# Source: crds/calico/crd.projectcalico.org_blockaffinities.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -515,8 +446,9 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
+
 ---
-# Source: calico/templates/kdd-crds.yaml
+# Source: crds/calico/crd.projectcalico.org_caliconodestatuses.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -742,8 +674,9 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
+
 ---
-# Source: calico/templates/kdd-crds.yaml
+# Source: crds/calico/crd.projectcalico.org_clusterinformations.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -799,8 +732,9 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
+
 ---
-# Source: calico/templates/kdd-crds.yaml
+# Source: crds/calico/crd.projectcalico.org_felixconfigurations.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -1362,8 +1296,9 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
+
 ---
-# Source: calico/templates/kdd-crds.yaml
+# Source: crds/calico/crd.projectcalico.org_globalnetworkpolicies.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -1840,8 +1775,9 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
+
 ---
-# Source: calico/templates/kdd-crds.yaml
+# Source: crds/calico/crd.projectcalico.org_globalnetworksets.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -1887,8 +1823,9 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
+
 ---
-# Source: calico/templates/kdd-crds.yaml
+# Source: crds/calico/crd.projectcalico.org_hostendpoints.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -1964,8 +1901,9 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
+
 ---
-# Source: calico/templates/kdd-crds.yaml
+# Source: crds/calico/crd.projectcalico.org_ipamblocks.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -2059,8 +1997,9 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
+
 ---
-# Source: calico/templates/kdd-crds.yaml
+# Source: crds/calico/crd.projectcalico.org_ipamconfigs.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -2112,8 +2051,9 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
+
 ---
-# Source: calico/templates/kdd-crds.yaml
+# Source: crds/calico/crd.projectcalico.org_ipamhandles.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -2164,8 +2104,9 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
+
 ---
-# Source: calico/templates/kdd-crds.yaml
+# Source: crds/calico/crd.projectcalico.org_ippools.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -2249,8 +2190,9 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
+
 ---
-# Source: calico/templates/kdd-crds.yaml
+# Source: crds/calico/crd.projectcalico.org_ipreservations.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -2297,8 +2239,9 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
+
 ---
-# Source: calico/templates/kdd-crds.yaml
+# Source: crds/calico/crd.projectcalico.org_kubecontrollersconfigurations.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -2491,8 +2434,9 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
+
 ---
-# Source: calico/templates/kdd-crds.yaml
+# Source: crds/calico/crd.projectcalico.org_networkpolicies.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -2957,8 +2901,9 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
+
 ---
-# Source: calico/templates/kdd-crds.yaml
+# Source: crds/calico/crd.projectcalico.org_networksets.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -3004,731 +2949,873 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
+
 ---
-# Source: calico/templates/calico-kube-controllers-rbac.yaml
-# Include a clusterrole for the kube-controllers component,
-# and bind it to the calico-kube-controllers serviceaccount.
-kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1
+# Source: crds/operator.tigera.io_apiservers_crd.yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
 metadata:
-  name: calico-kube-controllers
-rules:
-# Nodes are watched to monitor for deletions.
-- apiGroups: [""]
-  resources:
-  - nodes
-  verbs:
-  - watch
-  - list
-  - get
-# Pods are watched to check for existence as part of IPAM controller.
-- apiGroups: [""]
-  resources:
-  - pods
-  verbs:
-  - get
-  - list
-  - watch
-# IPAM resources are manipulated in response to node and block updates, as well as periodic triggers.
-- apiGroups: ["crd.projectcalico.org"]
-  resources:
-  - ipreservations
-  verbs:
-  - list
-- apiGroups: ["crd.projectcalico.org"]
-  resources:
-  - blockaffinities
-  - ipamblocks
-  - ipamhandles
-  verbs:
-  - get
-  - list
-  - create
-  - update
-  - delete
-  - watch
-# Pools are watched to maintain a mapping of blocks to IP pools.
-- apiGroups: ["crd.projectcalico.org"]
-  resources:
-  - ippools
-  verbs:
-  - list
-  - watch
-# kube-controllers manages hostendpoints.
-- apiGroups: ["crd.projectcalico.org"]
-  resources:
-  - hostendpoints
-  verbs:
-  - get
-  - list
-  - create
-  - update
-  - delete
-# Needs access to update clusterinformations.
-- apiGroups: ["crd.projectcalico.org"]
-  resources:
-  - clusterinformations
-  verbs:
-  - get
-  - list
-  - create
-  - update
-  - watch
-# KubeControllersConfiguration is where it gets its config
-- apiGroups: ["crd.projectcalico.org"]
-  resources:
-  - kubecontrollersconfigurations
-  verbs:
-  # read its own config
-  - get
-  # create a default if none exists
-  - create
-  # update status
-  - update
-  # watch for changes
-  - watch
----
-# Source: calico/templates/calico-node-rbac.yaml
-# Include a clusterrole for the calico-node DaemonSet,
-# and bind it to the calico-node serviceaccount.
-kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: calico-node
-rules:
-# Used for creating service account tokens to be used by the CNI plugin
-- apiGroups: [""]
-  resources:
-  - serviceaccounts/token
-  resourceNames:
-  - calico-cni-plugin
-  verbs:
-  - create
-# The CNI plugin needs to get pods, nodes, and namespaces.
-- apiGroups: [""]
-  resources:
-  - pods
-  - nodes
-  - namespaces
-  verbs:
-  - get
-# EndpointSlices are used for Service-based network policy rule
-# enforcement.
-- apiGroups: ["discovery.k8s.io"]
-  resources:
-  - endpointslices
-  verbs:
-  - watch
-  - list
-- apiGroups: [""]
-  resources:
-  - endpoints
-  - services
-  verbs:
-  # Used to discover service IPs for advertisement.
-  - watch
-  - list
-  # Used to discover Typhas.
-  - get
-# Pod CIDR auto-detection on kubeadm needs access to config maps.
-- apiGroups: [""]
-  resources:
-  - configmaps
-  verbs:
-  - get
-- apiGroups: [""]
-  resources:
-  - nodes/status
-  verbs:
-  # Needed for clearing NodeNetworkUnavailable flag.
-  - patch
-  # Calico stores some configuration information in node annotations.
-  - update
-# Watch for changes to Kubernetes NetworkPolicies.
-- apiGroups: ["networking.k8s.io"]
-  resources:
-  - networkpolicies
-  verbs:
-  - watch
-  - list
-# Used by Calico for policy information.
-- apiGroups: [""]
-  resources:
-  - pods
-  - namespaces
-  - serviceaccounts
-  verbs:
-  - list
-  - watch
-# The CNI plugin patches pods/status.
-- apiGroups: [""]
-  resources:
-  - pods/status
-  verbs:
-  - patch
-# Calico monitors various CRDs for config.
-- apiGroups: ["crd.projectcalico.org"]
-  resources:
-  - globalfelixconfigs
-  - felixconfigurations
-  - bgppeers
-  - bgpfilters
-  - globalbgpconfigs
-  - bgpconfigurations
-  - ippools
-  - ipreservations
-  - ipamblocks
-  - globalnetworkpolicies
-  - globalnetworksets
-  - networkpolicies
-  - networksets
-  - clusterinformations
-  - hostendpoints
-  - blockaffinities
-  - caliconodestatuses
-  verbs:
-  - get
-  - list
-  - watch
-# Calico must create and update some CRDs on startup.
-- apiGroups: ["crd.projectcalico.org"]
-  resources:
-  - ippools
-  - felixconfigurations
-  - clusterinformations
-  verbs:
-  - create
-  - update
-# Calico must update some CRDs.
-- apiGroups: ["crd.projectcalico.org"]
-  resources:
-  - caliconodestatuses
-  verbs:
-  - update
-# Calico stores some configuration information on the node.
-- apiGroups: [""]
-  resources:
-  - nodes
-  verbs:
-  - get
-  - list
-  - watch
-# These permissions are only required for upgrade from v2.6, and can
-# be removed after upgrade or on fresh installations.
-- apiGroups: ["crd.projectcalico.org"]
-  resources:
-  - bgpconfigurations
-  - bgppeers
-  verbs:
-  - create
-  - update
-# These permissions are required for Calico CNI to perform IPAM allocations.
-- apiGroups: ["crd.projectcalico.org"]
-  resources:
-  - blockaffinities
-  - ipamblocks
-  - ipamhandles
-  verbs:
-  - get
-  - list
-  - create
-  - update
-  - delete
-# The CNI plugin and calico/node need to be able to create a default
-# IPAMConfiguration
-- apiGroups: ["crd.projectcalico.org"]
-  resources:
-  - ipamconfigs
-  verbs:
-  - get
-  - create
-# Block affinities must also be watchable by confd for route aggregation.
-- apiGroups: ["crd.projectcalico.org"]
-  resources:
-  - blockaffinities
-  verbs:
-  - watch
-# The Calico IPAM migration needs to get daemonsets. These permissions can be
-# removed if not upgrading from an installation using host-local IPAM.
-- apiGroups: ["apps"]
-  resources:
-  - daemonsets
-  verbs:
-  - get
----
-# Source: calico/templates/calico-node-rbac.yaml
-# CNI cluster role
-kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: calico-cni-plugin
-rules:
-- apiGroups: [""]
-  resources:
-  - pods
-  - nodes
-  - namespaces
-  verbs:
-  - get
-- apiGroups: [""]
-  resources:
-  - pods/status
-  verbs:
-  - patch
-- apiGroups: ["crd.projectcalico.org"]
-  resources:
-  - blockaffinities
-  - ipamblocks
-  - ipamhandles
-  - clusterinformations
-  - ippools
-  - ipreservations
-  - ipamconfigs
-  verbs:
-  - get
-  - list
-  - create
-  - update
-  - delete
----
-# Source: calico/templates/calico-kube-controllers-rbac.yaml
-kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: calico-kube-controllers
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: calico-kube-controllers
-subjects:
-- kind: ServiceAccount
-  name: calico-kube-controllers
-  namespace: kube-system
----
-# Source: calico/templates/calico-node-rbac.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: calico-node
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: calico-node
-subjects:
-- kind: ServiceAccount
-  name: calico-node
-  namespace: kube-system
----
-# Source: calico/templates/calico-node-rbac.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: calico-cni-plugin
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: calico-cni-plugin
-subjects:
-- kind: ServiceAccount
-  name: calico-cni-plugin
-  namespace: kube-system
----
-# Source: calico/templates/calico-node.yaml
-# This manifest installs the calico-node container, as well
-# as the CNI plugins and network config on
-# each master and worker node in a Kubernetes cluster.
-kind: DaemonSet
-apiVersion: apps/v1
-metadata:
-  name: calico-node
-  namespace: kube-system
-  labels:
-    k8s-app: calico-node
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.3
+  name: apiservers.operator.tigera.io
 spec:
-  selector:
-    matchLabels:
-      k8s-app: calico-node
-  updateStrategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
-  template:
-    metadata:
-      labels:
-        k8s-app: calico-node
-    spec:
-      nodeSelector:
-        kubernetes.io/os: linux
-      hostNetwork: true
-      tolerations:
-      # Make sure calico-node gets scheduled on all nodes.
-      - effect: NoSchedule
-        operator: Exists
-      # Mark the pod as a critical add-on for rescheduling.
-      - key: CriticalAddonsOnly
-        operator: Exists
-      - effect: NoExecute
-        operator: Exists
-      serviceAccountName: calico-node
-      # Minimize downtime during a rolling upgrade or deletion; tell Kubernetes to do a "force
-      # deletion": https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods.
-      terminationGracePeriodSeconds: 0
-      priorityClassName: system-node-critical
-      initContainers:
-      # This container performs upgrade from host-local IPAM to calico-ipam.
-      # It can be deleted if this is a fresh installation, or if you have already
-      # upgraded to use calico-ipam.
-      - name: upgrade-ipam
-        image: docker.io/calico/cni:v3.28.1
-        imagePullPolicy: IfNotPresent
-        command: ["/opt/cni/bin/calico-ipam", "-upgrade"]
-        envFrom:
-        - configMapRef:
-            # Allow KUBERNETES_SERVICE_HOST and KUBERNETES_SERVICE_PORT to be overridden for eBPF mode.
-            name: kubernetes-services-endpoint
-            optional: true
-        env:
-        - name: KUBERNETES_NODE_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: spec.nodeName
-        - name: CALICO_NETWORKING_BACKEND
-          valueFrom:
-            configMapKeyRef:
-              name: calico-config
-              key: calico_backend
-        volumeMounts:
-        - mountPath: /var/lib/cni/networks
-          name: host-local-net-dir
-        - mountPath: /host/opt/cni/bin
-          name: cni-bin-dir
-        securityContext:
-          privileged: true
-      # This container installs the CNI binaries
-      # and CNI network config file on each node.
-      - name: install-cni
-        image: docker.io/calico/cni:v3.28.1
-        imagePullPolicy: IfNotPresent
-        command: ["/opt/cni/bin/install"]
-        envFrom:
-        - configMapRef:
-            # Allow KUBERNETES_SERVICE_HOST and KUBERNETES_SERVICE_PORT to be overridden for eBPF mode.
-            name: kubernetes-services-endpoint
-            optional: true
-        env:
-        # Name of the CNI config file to create.
-        - name: CNI_CONF_NAME
-          value: "10-calico.conflist"
-        # The CNI network config to install on each node.
-        - name: CNI_NETWORK_CONFIG
-          valueFrom:
-            configMapKeyRef:
-              name: calico-config
-              key: cni_network_config
-        # Set the hostname based on the k8s node name.
-        - name: KUBERNETES_NODE_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: spec.nodeName
-        # CNI MTU Config variable
-        - name: CNI_MTU
-          valueFrom:
-            configMapKeyRef:
-              name: calico-config
-              key: veth_mtu
-        # Prevents the container from sleeping forever.
-        - name: SLEEP
-          value: "false"
-        volumeMounts:
-        - mountPath: /host/opt/cni/bin
-          name: cni-bin-dir
-        - mountPath: /host/etc/cni/net.d
-          name: cni-net-dir
-        securityContext:
-          privileged: true
-      # This init container mounts the necessary filesystems needed by the BPF data plane
-      # i.e. bpf at /sys/fs/bpf and cgroup2 at /run/calico/cgroup. Calico-node initialisation is executed
-      # in best effort fashion, i.e. no failure for errors, to not disrupt pod creation in iptable mode.
-      - name: "mount-bpffs"
-        image: docker.io/calico/node:v3.28.1
-        imagePullPolicy: IfNotPresent
-        command: ["calico-node", "-init", "-best-effort"]
-        volumeMounts:
-        - mountPath: /sys/fs
-          name: sys-fs
-          # Bidirectional is required to ensure that the new mount we make at /sys/fs/bpf propagates to the host
-          # so that it outlives the init container.
-          mountPropagation: Bidirectional
-        - mountPath: /var/run/calico
-          name: var-run-calico
-          # Bidirectional is required to ensure that the new mount we make at /run/calico/cgroup propagates to the host
-          # so that it outlives the init container.
-          mountPropagation: Bidirectional
-        # Mount /proc/ from host which usually is an init program at /nodeproc. It's needed by mountns binary,
-        # executed by calico-node, to mount root cgroup2 fs at /run/calico/cgroup to attach CTLB programs correctly.
-        - mountPath: /nodeproc
-          name: nodeproc
-          readOnly: true
-        securityContext:
-          privileged: true
-      containers:
-      # Runs calico-node container on each Kubernetes node. This
-      # container programs network policy and routes on each
-      # host.
-      - name: calico-node
-        image: docker.io/calico/node:v3.28.1
-        imagePullPolicy: IfNotPresent
-        envFrom:
-        - configMapRef:
-            # Allow KUBERNETES_SERVICE_HOST and KUBERNETES_SERVICE_PORT to be overridden for eBPF mode.
-            name: kubernetes-services-endpoint
-            optional: true
-        env:
-        # Use Kubernetes API as the backing datastore.
-        - name: DATASTORE_TYPE
-          value: "kubernetes"
-        # Wait for the datastore.
-        - name: WAIT_FOR_DATASTORE
-          value: "true"
-        # Set based on the k8s node name.
-        - name: NODENAME
-          valueFrom:
-            fieldRef:
-              fieldPath: spec.nodeName
-        # Choose the backend to use.
-        - name: CALICO_NETWORKING_BACKEND
-          valueFrom:
-            configMapKeyRef:
-              name: calico-config
-              key: calico_backend
-        # Cluster type to identify the deployment type
-        - name: CLUSTER_TYPE
-          value: "k8s,bgp"
-        # Auto-detect the BGP IP address.
-        - name: IP
-          value: "autodetect"
-        # Enable IPIP
-        - name: CALICO_IPV4POOL_IPIP
-          value: "Always"
-        # Enable or Disable VXLAN on the default IP pool.
-        - name: CALICO_IPV4POOL_VXLAN
-          value: "Never"
-        # Enable or Disable VXLAN on the default IPv6 IP pool.
-        - name: CALICO_IPV6POOL_VXLAN
-          value: "Never"
-        # Set MTU for tunnel device used if ipip is enabled
-        - name: FELIX_IPINIPMTU
-          valueFrom:
-            configMapKeyRef:
-              name: calico-config
-              key: veth_mtu
-        # Set MTU for the VXLAN tunnel device.
-        - name: FELIX_VXLANMTU
-          valueFrom:
-            configMapKeyRef:
-              name: calico-config
-              key: veth_mtu
-        # Set MTU for the Wireguard tunnel device.
-        - name: FELIX_WIREGUARDMTU
-          valueFrom:
-            configMapKeyRef:
-              name: calico-config
-              key: veth_mtu
-        # The default IPv4 pool to create on startup if none exists. Pod IPs will be
-        # chosen from this range. Changing this value after installation will have
-        # no effect. This should fall within `--cluster-cidr`.
-        # - name: CALICO_IPV4POOL_CIDR
-        #   value: "192.168.0.0/16"
-        # Disable file logging so `kubectl logs` works.
-        - name: CALICO_DISABLE_FILE_LOGGING
-          value: "true"
-        # Set Felix endpoint to host default action to ACCEPT.
-        - name: FELIX_DEFAULTENDPOINTTOHOSTACTION
-          value: "ACCEPT"
-        # Disable IPv6 on Kubernetes.
-        - name: FELIX_IPV6SUPPORT
-          value: "false"
-        - name: FELIX_HEALTHENABLED
-          value: "true"
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            cpu: 250m
-        lifecycle:
-          preStop:
-            exec:
-              command:
-              - /bin/calico-node
-              - -shutdown
-        livenessProbe:
-          exec:
-            command:
-            - /bin/calico-node
-            - -felix-live
-            - -bird-live
-          periodSeconds: 10
-          initialDelaySeconds: 10
-          failureThreshold: 6
-          timeoutSeconds: 10
-        readinessProbe:
-          exec:
-            command:
-            - /bin/calico-node
-            - -felix-ready
-            - -bird-ready
-          periodSeconds: 10
-          timeoutSeconds: 10
-        volumeMounts:
-        # For maintaining CNI plugin API credentials.
-        - mountPath: /host/etc/cni/net.d
-          name: cni-net-dir
-          readOnly: false
-        - mountPath: /lib/modules
-          name: lib-modules
-          readOnly: true
-        - mountPath: /run/xtables.lock
-          name: xtables-lock
-          readOnly: false
-        - mountPath: /var/run/calico
-          name: var-run-calico
-          readOnly: false
-        - mountPath: /var/lib/calico
-          name: var-lib-calico
-          readOnly: false
-        - name: policysync
-          mountPath: /var/run/nodeagent
-        # For eBPF mode, we need to be able to mount the BPF filesystem at /sys/fs/bpf so we mount in the
-        # parent directory.
-        - name: bpffs
-          mountPath: /sys/fs/bpf
-        - name: cni-log-dir
-          mountPath: /var/log/calico/cni
-          readOnly: true
-      volumes:
-      # Used by calico-node.
-      - name: lib-modules
-        hostPath:
-          path: /lib/modules
-      - name: var-run-calico
-        hostPath:
-          path: /var/run/calico
-          type: DirectoryOrCreate
-      - name: var-lib-calico
-        hostPath:
-          path: /var/lib/calico
-          type: DirectoryOrCreate
-      - name: xtables-lock
-        hostPath:
-          path: /run/xtables.lock
-          type: FileOrCreate
-      - name: sys-fs
-        hostPath:
-          path: /sys/fs/
-          type: DirectoryOrCreate
-      - name: bpffs
-        hostPath:
-          path: /sys/fs/bpf
-          type: Directory
-      # mount /proc at /nodeproc to be used by mount-bpffs initContainer to mount root cgroup2 fs.
-      - name: nodeproc
-        hostPath:
-          path: /proc
-      # Used to install CNI.
-      - name: cni-bin-dir
-        hostPath:
-          path: /opt/cni/bin
-          type: DirectoryOrCreate
-      - name: cni-net-dir
-        hostPath:
-          path: /etc/cni/net.d
-      # Used to access CNI logs.
-      - name: cni-log-dir
-        hostPath:
-          path: /var/log/calico/cni
-      # Mount in the directory for host-local IPAM allocations. This is
-      # used when upgrading from host-local to calico-ipam, and can be removed
-      # if not using the upgrade-ipam init container.
-      - name: host-local-net-dir
-        hostPath:
-          path: /var/lib/cni/networks
-      # Used to create per-pod Unix Domain Sockets
-      - name: policysync
-        hostPath:
-          type: DirectoryOrCreate
-          path: /var/run/nodeagent
+  group: operator.tigera.io
+  names:
+    kind: APIServer
+    listKind: APIServerList
+    plural: apiservers
+    singular: apiserver
+  scope: Cluster
+  versions:
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        description: APIServer installs the Tigera API server and related resources. At most one instance of this resource is supported. It must be named "default" or "tigera-secure".
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Specification of the desired state for the Tigera API server.
+            properties:
+              apiServerDeployment:
+                description: APIServerDeployment configures the calico-apiserver (or tigera-apiserver in Enterprise) Deployment. If used in conjunction with ControlPlaneNodeSelector or ControlPlaneTolerations, then these overrides take precedence.
+                properties:
+                  metadata:
+                    description: Metadata is a subset of a Kubernetes object's metadata that is added to the Deployment.
+                    properties:
+                      annotations:
+                        additionalProperties:
+                          type: string
+                        description: Annotations is a map of arbitrary non-identifying metadata. Each of these key/value pairs are added to the object's annotations provided the key does not already exist in the object's annotations.
+                        type: object
+                      labels:
+                        additionalProperties:
+                          type: string
+                        description: Labels is a map of string keys and values that may match replicaset and service selectors. Each of these key/value pairs are added to the object's labels provided the key does not already exist in the object's labels.
+                        type: object
+                    type: object
+                  spec:
+                    description: Spec is the specification of the API server Deployment.
+                    properties:
+                      minReadySeconds:
+                        description: MinReadySeconds is the minimum number of seconds for which a newly created Deployment pod should be ready without any of its container crashing, for it to be considered available. If specified, this overrides any minReadySeconds value that may be set on the API server Deployment. If omitted, the API server Deployment will use its default value for minReadySeconds.
+                        format: int32
+                        maximum: 2147483647
+                        minimum: 0
+                        type: integer
+                      template:
+                        description: Template describes the API server Deployment pod that will be created.
+                        properties:
+                          metadata:
+                            description: Metadata is a subset of a Kubernetes object's metadata that is added to the pod's metadata.
+                            properties:
+                              annotations:
+                                additionalProperties:
+                                  type: string
+                                description: Annotations is a map of arbitrary non-identifying metadata. Each of these key/value pairs are added to the object's annotations provided the key does not already exist in the object's annotations.
+                                type: object
+                              labels:
+                                additionalProperties:
+                                  type: string
+                                description: Labels is a map of string keys and values that may match replicaset and service selectors. Each of these key/value pairs are added to the object's labels provided the key does not already exist in the object's labels.
+                                type: object
+                            type: object
+                          spec:
+                            description: Spec is the API server Deployment's PodSpec.
+                            properties:
+                              affinity:
+                                description: 'Affinity is a group of affinity scheduling rules for the API server pods. If specified, this overrides any affinity that may be set on the API server Deployment. If omitted, the API server Deployment will use its default value for affinity. WARNING: Please note that this field will override the default API server Deployment affinity.'
+                                properties:
+                                  nodeAffinity:
+                                    description: Describes node affinity scheduling rules for the pod.
+                                    properties:
+                                      preferredDuringSchedulingIgnoredDuringExecution:
+                                        description: The scheduler will prefer to schedule pods to nodes that satisfy the affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node matches the corresponding matchExpressions; the node(s) with the highest sum are the most preferred.
+                                        items:
+                                          description: An empty preferred scheduling term matches all objects with implicit weight 0 (i.e. it's a no-op). A null preferred scheduling term matches no objects (i.e. is also a no-op).
+                                          properties:
+                                            preference:
+                                              description: A node selector term, associated with the corresponding weight.
+                                              properties:
+                                                matchExpressions:
+                                                  description: A list of node selector requirements by node's labels.
+                                                  items:
+                                                    description: A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+                                                    properties:
+                                                      key:
+                                                        description: The label key that the selector applies to.
+                                                        type: string
+                                                      operator:
+                                                        description: Represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists, DoesNotExist. Gt, and Lt.
+                                                        type: string
+                                                      values:
+                                                        description: An array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. If the operator is Gt or Lt, the values array must have a single element, which will be interpreted as an integer. This array is replaced during a strategic merge patch.
+                                                        items:
+                                                          type: string
+                                                        type: array
+                                                    required:
+                                                    - key
+                                                    - operator
+                                                    type: object
+                                                  type: array
+                                                matchFields:
+                                                  description: A list of node selector requirements by node's fields.
+                                                  items:
+                                                    description: A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+                                                    properties:
+                                                      key:
+                                                        description: The label key that the selector applies to.
+                                                        type: string
+                                                      operator:
+                                                        description: Represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists, DoesNotExist. Gt, and Lt.
+                                                        type: string
+                                                      values:
+                                                        description: An array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. If the operator is Gt or Lt, the values array must have a single element, which will be interpreted as an integer. This array is replaced during a strategic merge patch.
+                                                        items:
+                                                          type: string
+                                                        type: array
+                                                    required:
+                                                    - key
+                                                    - operator
+                                                    type: object
+                                                  type: array
+                                              type: object
+                                              x-kubernetes-map-type: atomic
+                                            weight:
+                                              description: Weight associated with matching the corresponding nodeSelectorTerm, in the range 1-100.
+                                              format: int32
+                                              type: integer
+                                          required:
+                                          - preference
+                                          - weight
+                                          type: object
+                                        type: array
+                                      requiredDuringSchedulingIgnoredDuringExecution:
+                                        description: If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to an update), the system may or may not try to eventually evict the pod from its node.
+                                        properties:
+                                          nodeSelectorTerms:
+                                            description: Required. A list of node selector terms. The terms are ORed.
+                                            items:
+                                              description: A null or empty node selector term matches no objects. The requirements of them are ANDed. The TopologySelectorTerm type implements a subset of the NodeSelectorTerm.
+                                              properties:
+                                                matchExpressions:
+                                                  description: A list of node selector requirements by node's labels.
+                                                  items:
+                                                    description: A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+                                                    properties:
+                                                      key:
+                                                        description: The label key that the selector applies to.
+                                                        type: string
+                                                      operator:
+                                                        description: Represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists, DoesNotExist. Gt, and Lt.
+                                                        type: string
+                                                      values:
+                                                        description: An array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. If the operator is Gt or Lt, the values array must have a single element, which will be interpreted as an integer. This array is replaced during a strategic merge patch.
+                                                        items:
+                                                          type: string
+                                                        type: array
+                                                    required:
+                                                    - key
+                                                    - operator
+                                                    type: object
+                                                  type: array
+                                                matchFields:
+                                                  description: A list of node selector requirements by node's fields.
+                                                  items:
+                                                    description: A node selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+                                                    properties:
+                                                      key:
+                                                        description: The label key that the selector applies to.
+                                                        type: string
+                                                      operator:
+                                                        description: Represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists, DoesNotExist. Gt, and Lt.
+                                                        type: string
+                                                      values:
+                                                        description: An array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. If the operator is Gt or Lt, the values array must have a single element, which will be interpreted as an integer. This array is replaced during a strategic merge patch.
+                                                        items:
+                                                          type: string
+                                                        type: array
+                                                    required:
+                                                    - key
+                                                    - operator
+                                                    type: object
+                                                  type: array
+                                              type: object
+                                              x-kubernetes-map-type: atomic
+                                            type: array
+                                        required:
+                                        - nodeSelectorTerms
+                                        type: object
+                                        x-kubernetes-map-type: atomic
+                                    type: object
+                                  podAffinity:
+                                    description: Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).
+                                    properties:
+                                      preferredDuringSchedulingIgnoredDuringExecution:
+                                        description: The scheduler will prefer to schedule pods to nodes that satisfy the affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the node(s) with the highest sum are the most preferred.
+                                        items:
+                                          description: The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)
+                                          properties:
+                                            podAffinityTerm:
+                                              description: Required. A pod affinity term, associated with the corresponding weight.
+                                              properties:
+                                                labelSelector:
+                                                  description: A label query over a set of resources, in this case pods.
+                                                  properties:
+                                                    matchExpressions:
+                                                      description: matchExpressions is a list of label selector requirements. The requirements are ANDed.
+                                                      items:
+                                                        description: A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+                                                        properties:
+                                                          key:
+                                                            description: key is the label key that the selector applies to.
+                                                            type: string
+                                                          operator:
+                                                            description: operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+                                                            type: string
+                                                          values:
+                                                            description: values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+                                                            items:
+                                                              type: string
+                                                            type: array
+                                                        required:
+                                                        - key
+                                                        - operator
+                                                        type: object
+                                                      type: array
+                                                    matchLabels:
+                                                      additionalProperties:
+                                                        type: string
+                                                      description: matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+                                                      type: object
+                                                  type: object
+                                                  x-kubernetes-map-type: atomic
+                                                namespaceSelector:
+                                                  description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
+                                                  properties:
+                                                    matchExpressions:
+                                                      description: matchExpressions is a list of label selector requirements. The requirements are ANDed.
+                                                      items:
+                                                        description: A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+                                                        properties:
+                                                          key:
+                                                            description: key is the label key that the selector applies to.
+                                                            type: string
+                                                          operator:
+                                                            description: operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+                                                            type: string
+                                                          values:
+                                                            description: values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+                                                            items:
+                                                              type: string
+                                                            type: array
+                                                        required:
+                                                        - key
+                                                        - operator
+                                                        type: object
+                                                      type: array
+                                                    matchLabels:
+                                                      additionalProperties:
+                                                        type: string
+                                                      description: matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+                                                      type: object
+                                                  type: object
+                                                  x-kubernetes-map-type: atomic
+                                                namespaces:
+                                                  description: namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
+                                                  items:
+                                                    type: string
+                                                  type: array
+                                                topologyKey:
+                                                  description: This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching the labelSelector in the specified namespaces, where co-located is defined as running on a node whose value of the label with key topologyKey matches that of any node on which any of the selected pods is running. Empty topologyKey is not allowed.
+                                                  type: string
+                                              required:
+                                              - topologyKey
+                                              type: object
+                                            weight:
+                                              description: weight associated with matching the corresponding podAffinityTerm, in the range 1-100.
+                                              format: int32
+                                              type: integer
+                                          required:
+                                          - podAffinityTerm
+                                          - weight
+                                          type: object
+                                        type: array
+                                      requiredDuringSchedulingIgnoredDuringExecution:
+                                        description: If the affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to a pod label update), the system may or may not try to eventually evict the pod from its node. When there are multiple elements, the lists of nodes corresponding to each podAffinityTerm are intersected, i.e. all terms must be satisfied.
+                                        items:
+                                          description: Defines a set of pods (namely those matching the labelSelector relative to the given namespace(s)) that this pod should be co-located (affinity) or not co-located (anti-affinity) with, where co-located is defined as running on a node whose value of the label with key <topologyKey> matches that of any node on which a pod of the set of pods is running
+                                          properties:
+                                            labelSelector:
+                                              description: A label query over a set of resources, in this case pods.
+                                              properties:
+                                                matchExpressions:
+                                                  description: matchExpressions is a list of label selector requirements. The requirements are ANDed.
+                                                  items:
+                                                    description: A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+                                                    properties:
+                                                      key:
+                                                        description: key is the label key that the selector applies to.
+                                                        type: string
+                                                      operator:
+                                                        description: operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+                                                        type: string
+                                                      values:
+                                                        description: values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+                                                        items:
+                                                          type: string
+                                                        type: array
+                                                    required:
+                                                    - key
+                                                    - operator
+                                                    type: object
+                                                  type: array
+                                                matchLabels:
+                                                  additionalProperties:
+                                                    type: string
+                                                  description: matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+                                                  type: object
+                                              type: object
+                                              x-kubernetes-map-type: atomic
+                                            namespaceSelector:
+                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
+                                              properties:
+                                                matchExpressions:
+                                                  description: matchExpressions is a list of label selector requirements. The requirements are ANDed.
+                                                  items:
+                                                    description: A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+                                                    properties:
+                                                      key:
+                                                        description: key is the label key that the selector applies to.
+                                                        type: string
+                                                      operator:
+                                                        description: operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+                                                        type: string
+                                                      values:
+                                                        description: values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+                                                        items:
+                                                          type: string
+                                                        type: array
+                                                    required:
+                                                    - key
+                                                    - operator
+                                                    type: object
+                                                  type: array
+                                                matchLabels:
+                                                  additionalProperties:
+                                                    type: string
+                                                  description: matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+                                                  type: object
+                                              type: object
+                                              x-kubernetes-map-type: atomic
+                                            namespaces:
+                                              description: namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
+                                              items:
+                                                type: string
+                                              type: array
+                                            topologyKey:
+                                              description: This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching the labelSelector in the specified namespaces, where co-located is defined as running on a node whose value of the label with key topologyKey matches that of any node on which any of the selected pods is running. Empty topologyKey is not allowed.
+                                              type: string
+                                          required:
+                                          - topologyKey
+                                          type: object
+                                        type: array
+                                    type: object
+                                  podAntiAffinity:
+                                    description: Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).
+                                    properties:
+                                      preferredDuringSchedulingIgnoredDuringExecution:
+                                        description: The scheduler will prefer to schedule pods to nodes that satisfy the anti-affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling anti-affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the node(s) with the highest sum are the most preferred.
+                                        items:
+                                          description: The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)
+                                          properties:
+                                            podAffinityTerm:
+                                              description: Required. A pod affinity term, associated with the corresponding weight.
+                                              properties:
+                                                labelSelector:
+                                                  description: A label query over a set of resources, in this case pods.
+                                                  properties:
+                                                    matchExpressions:
+                                                      description: matchExpressions is a list of label selector requirements. The requirements are ANDed.
+                                                      items:
+                                                        description: A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+                                                        properties:
+                                                          key:
+                                                            description: key is the label key that the selector applies to.
+                                                            type: string
+                                                          operator:
+                                                            description: operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+                                                            type: string
+                                                          values:
+                                                            description: values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+                                                            items:
+                                                              type: string
+                                                            type: array
+                                                        required:
+                                                        - key
+                                                        - operator
+                                                        type: object
+                                                      type: array
+                                                    matchLabels:
+                                                      additionalProperties:
+                                                        type: string
+                                                      description: matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+                                                      type: object
+                                                  type: object
+                                                  x-kubernetes-map-type: atomic
+                                                namespaceSelector:
+                                                  description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
+                                                  properties:
+                                                    matchExpressions:
+                                                      description: matchExpressions is a list of label selector requirements. The requirements are ANDed.
+                                                      items:
+                                                        description: A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+                                                        properties:
+                                                          key:
+                                                            description: key is the label key that the selector applies to.
+                                                            type: string
+                                                          operator:
+                                                            description: operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+                                                            type: string
+                                                          values:
+                                                            description: values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+                                                            items:
+                                                              type: string
+                                                            type: array
+                                                        required:
+                                                        - key
+                                                        - operator
+                                                        type: object
+                                                      type: array
+                                                    matchLabels:
+                                                      additionalProperties:
+                                                        type: string
+                                                      description: matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+                                                      type: object
+                                                  type: object
+                                                  x-kubernetes-map-type: atomic
+                                                namespaces:
+                                                  description: namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
+                                                  items:
+                                                    type: string
+                                                  type: array
+                                                topologyKey:
+                                                  description: This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching the labelSelector in the specified namespaces, where co-located is defined as running on a node whose value of the label with key topologyKey matches that of any node on which any of the selected pods is running. Empty topologyKey is not allowed.
+                                                  type: string
+                                              required:
+                                              - topologyKey
+                                              type: object
+                                            weight:
+                                              description: weight associated with matching the corresponding podAffinityTerm, in the range 1-100.
+                                              format: int32
+                                              type: integer
+                                          required:
+                                          - podAffinityTerm
+                                          - weight
+                                          type: object
+                                        type: array
+                                      requiredDuringSchedulingIgnoredDuringExecution:
+                                        description: If the anti-affinity requirements specified by this field are not met at scheduling time, the pod will not be scheduled onto the node. If the anti-affinity requirements specified by this field cease to be met at some point during pod execution (e.g. due to a pod label update), the system may or may not try to eventually evict the pod from its node. When there are multiple elements, the lists of nodes corresponding to each podAffinityTerm are intersected, i.e. all terms must be satisfied.
+                                        items:
+                                          description: Defines a set of pods (namely those matching the labelSelector relative to the given namespace(s)) that this pod should be co-located (affinity) or not co-located (anti-affinity) with, where co-located is defined as running on a node whose value of the label with key <topologyKey> matches that of any node on which a pod of the set of pods is running
+                                          properties:
+                                            labelSelector:
+                                              description: A label query over a set of resources, in this case pods.
+                                              properties:
+                                                matchExpressions:
+                                                  description: matchExpressions is a list of label selector requirements. The requirements are ANDed.
+                                                  items:
+                                                    description: A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+                                                    properties:
+                                                      key:
+                                                        description: key is the label key that the selector applies to.
+                                                        type: string
+                                                      operator:
+                                                        description: operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+                                                        type: string
+                                                      values:
+                                                        description: values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+                                                        items:
+                                                          type: string
+                                                        type: array
+                                                    required:
+                                                    - key
+                                                    - operator
+                                                    type: object
+                                                  type: array
+                                                matchLabels:
+                                                  additionalProperties:
+                                                    type: string
+                                                  description: matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+                                                  type: object
+                                              type: object
+                                              x-kubernetes-map-type: atomic
+                                            namespaceSelector:
+                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces.
+                                              properties:
+                                                matchExpressions:
+                                                  description: matchExpressions is a list of label selector requirements. The requirements are ANDed.
+                                                  items:
+                                                    description: A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+                                                    properties:
+                                                      key:
+                                                        description: key is the label key that the selector applies to.
+                                                        type: string
+                                                      operator:
+                                                        description: operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+                                                        type: string
+                                                      values:
+                                                        description: values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+                                                        items:
+                                                          type: string
+                                                        type: array
+                                                    required:
+                                                    - key
+                                                    - operator
+                                                    type: object
+                                                  type: array
+                                                matchLabels:
+                                                  additionalProperties:
+                                                    type: string
+                                                  description: matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+                                                  type: object
+                                              type: object
+                                              x-kubernetes-map-type: atomic
+                                            namespaces:
+                                              description: namespaces specifies a static list of namespace names that the term applies to. The term is applied to the union of the namespaces listed in this field and the ones selected by namespaceSelector. null or empty namespaces list and null namespaceSelector means "this pod's namespace".
+                                              items:
+                                                type: string
+                                              type: array
+                                            topologyKey:
+                                              description: This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching the labelSelector in the specified namespaces, where co-located is defined as running on a node whose value of the label with key topologyKey matches that of any node on which any of the selected pods is running. Empty topologyKey is not allowed.
+                                              type: string
+                                          required:
+                                          - topologyKey
+                                          type: object
+                                        type: array
+                                    type: object
+                                type: object
+                              containers:
+                                description: Containers is a list of API server containers. If specified, this overrides the specified API server Deployment containers. If omitted, the API server Deployment will use its default values for its containers.
+                                items:
+                                  description: APIServerDeploymentContainer is an API server Deployment container.
+                                  properties:
+                                    name:
+                                      description: 'Name is an enum which identifies the API server Deployment container by name. Supported values are: calico-apiserver, tigera-queryserver'
+                                      enum:
+                                      - calico-apiserver
+                                      - tigera-queryserver
+                                      type: string
+                                    resources:
+                                      description: Resources allows customization of limits and requests for compute resources such as cpu and memory. If specified, this overrides the named API server Deployment container's resources. If omitted, the API server Deployment will use its default value for this container's resources. If used in conjunction with the deprecated ComponentResources, then this value takes precedence.
+                                      properties:
+                                        claims:
+                                          description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable. It can only be set for containers."
+                                          items:
+                                            description: ResourceClaim references one entry in PodSpec.ResourceClaims.
+                                            properties:
+                                              name:
+                                                description: Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
+                                                type: string
+                                            required:
+                                            - name
+                                            type: object
+                                          type: array
+                                          x-kubernetes-list-map-keys:
+                                          - name
+                                          x-kubernetes-list-type: map
+                                        limits:
+                                          additionalProperties:
+                                            anyOf:
+                                            - type: integer
+                                            - type: string
+                                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                            x-kubernetes-int-or-string: true
+                                          description: 'Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                                          type: object
+                                        requests:
+                                          additionalProperties:
+                                            anyOf:
+                                            - type: integer
+                                            - type: string
+                                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                            x-kubernetes-int-or-string: true
+                                          description: 'Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                                          type: object
+                                      type: object
+                                  required:
+                                  - name
+                                  type: object
+                                type: array
+                              initContainers:
+                                description: InitContainers is a list of API server init containers. If specified, this overrides the specified API server Deployment init containers. If omitted, the API server Deployment will use its default values for its init containers.
+                                items:
+                                  description: APIServerDeploymentInitContainer is an API server Deployment init container.
+                                  properties:
+                                    name:
+                                      description: 'Name is an enum which identifies the API server Deployment init container by name. Supported values are: calico-apiserver-certs-key-cert-provisioner'
+                                      enum:
+                                      - calico-apiserver-certs-key-cert-provisioner
+                                      type: string
+                                    resources:
+                                      description: Resources allows customization of limits and requests for compute resources such as cpu and memory. If specified, this overrides the named API server Deployment init container's resources. If omitted, the API server Deployment will use its default value for this init container's resources.
+                                      properties:
+                                        claims:
+                                          description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable. It can only be set for containers."
+                                          items:
+                                            description: ResourceClaim references one entry in PodSpec.ResourceClaims.
+                                            properties:
+                                              name:
+                                                description: Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
+                                                type: string
+                                            required:
+                                            - name
+                                            type: object
+                                          type: array
+                                          x-kubernetes-list-map-keys:
+                                          - name
+                                          x-kubernetes-list-type: map
+                                        limits:
+                                          additionalProperties:
+                                            anyOf:
+                                            - type: integer
+                                            - type: string
+                                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                            x-kubernetes-int-or-string: true
+                                          description: 'Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                                          type: object
+                                        requests:
+                                          additionalProperties:
+                                            anyOf:
+                                            - type: integer
+                                            - type: string
+                                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                            x-kubernetes-int-or-string: true
+                                          description: 'Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                                          type: object
+                                      type: object
+                                  required:
+                                  - name
+                                  type: object
+                                type: array
+                              nodeSelector:
+                                additionalProperties:
+                                  type: string
+                                description: 'NodeSelector is the API server pod''s scheduling constraints. If specified, each of the key/value pairs are added to the API server Deployment nodeSelector provided the key does not already exist in the object''s nodeSelector. If used in conjunction with ControlPlaneNodeSelector, that nodeSelector is set on the API server Deployment and each of this field''s key/value pairs are added to the API server Deployment nodeSelector provided the key does not already exist in the object''s nodeSelector. If omitted, the API server Deployment will use its default value for nodeSelector. WARNING: Please note that this field will modify the default API server Deployment nodeSelector.'
+                                type: object
+                              tolerations:
+                                description: 'Tolerations is the API server pod''s tolerations. If specified, this overrides any tolerations that may be set on the API server Deployment. If omitted, the API server Deployment will use its default value for tolerations. WARNING: Please note that this field will override the default API server Deployment tolerations.'
+                                items:
+                                  description: The pod this Toleration is attached to tolerates any taint that matches the triple <key,value,effect> using the matching operator <operator>.
+                                  properties:
+                                    effect:
+                                      description: Effect indicates the taint effect to match. Empty means match all taint effects. When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
+                                      type: string
+                                    key:
+                                      description: Key is the taint key that the toleration applies to. Empty means match all taint keys. If the key is empty, operator must be Exists; this combination means to match all values and all keys.
+                                      type: string
+                                    operator:
+                                      description: Operator represents a key's relationship to the value. Valid operators are Exists and Equal. Defaults to Equal. Exists is equivalent to wildcard for value, so that a pod can tolerate all taints of a particular category.
+                                      type: string
+                                    tolerationSeconds:
+                                      description: TolerationSeconds represents the period of time the toleration (which must be of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default, it is not set, which means tolerate the taint forever (do not evict). Zero and negative values will be treated as 0 (evict immediately) by the system.
+                                      format: int64
+                                      type: integer
+                                    value:
+                                      description: Value is the taint value the toleration matches to. If the operator is Exists, the value should be empty, otherwise just a regular string.
+                                      type: string
+                                  type: object
+                                type: array
+                              topologySpreadConstraints:
+                                description: TopologySpreadConstraints describes how a group of pods ought to spread across topology domains. Scheduler will schedule pods in a way which abides by the constraints. All topologySpreadConstraints are ANDed.
+                                items:
+                                  description: TopologySpreadConstraint specifies how to spread matching pods among the given topology.
+                                  properties:
+                                    labelSelector:
+                                      description: LabelSelector is used to find matching pods. Pods that match this label selector are counted to determine the number of pods in their corresponding topology domain.
+                                      properties:
+                                        matchExpressions:
+                                          description: matchExpressions is a list of label selector requirements. The requirements are ANDed.
+                                          items:
+                                            description: A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.
+                                            properties:
+                                              key:
+                                                description: key is the label key that the selector applies to.
+                                                type: string
+                                              operator:
+                                                description: operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.
+                                                type: string
+                                              values:
+                                                description: values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
+                                                items:
+                                                  type: string
+                                                type: array
+                                            required:
+                                            - key
+                                            - operator
+                                            type: object
+                                          type: array
+                                        matchLabels:
+                                          additionalProperties:
+                                            type: string
+                                          description: matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is "key", the operator is "In", and the values array contains only "value". The requirements are ANDed.
+                                          type: object
+                                      type: object
+                                      x-kubernetes-map-type: atomic
+                                    matchLabelKeys:
+                                      description: "MatchLabelKeys is a set of pod label keys to select the pods over which spreading will be calculated. The keys are used to lookup values from the incoming pod labels, those key-value labels are ANDed with labelSelector to select the group of existing pods over which spreading will be calculated for the incoming pod. The same key is forbidden to exist in both MatchLabelKeys and LabelSelector. MatchLabelKeys cannot be set when LabelSelector isn't set. Keys that don't exist in the incoming pod labels will be ignored. A null or empty list means only match against labelSelector. \n This is a beta field and requires the MatchLabelKeysInPodTopologySpread feature gate to be enabled (enabled by default)."
+                                      items:
+                                        type: string
+                                      type: array
+                                      x-kubernetes-list-type: atomic
+                                    maxSkew:
+                                      description: 'MaxSkew describes the degree to which pods may be unevenly distributed. When `whenUnsatisfiable=DoNotSchedule`, it is the maximum permitted difference between the number of matching pods in the target topology and the global minimum. The global minimum is the minimum number of matching pods in an eligible domain or zero if the number of eligible domains is less than MinDomains. For example, in a 3-zone cluster, MaxSkew is set to 1, and pods with the same labelSelector spread as 2/2/1: In this case, the global minimum is 1. | zone1 | zone2 | zone3 | |  P P  |  P P  |   P   | - if MaxSkew is 1, incoming pod can only be scheduled to zone3 to become 2/2/2; scheduling it onto zone1(zone2) would make the ActualSkew(3-1) on zone1(zone2) violate MaxSkew(1). - if MaxSkew is 2, incoming pod can be scheduled onto any zone. When `whenUnsatisfiable=ScheduleAnyway`, it is used to give higher precedence to topologies that satisfy it. It''s a required field. Default value is 1 and 0 is not allowed.'
+                                      format: int32
+                                      type: integer
+                                    minDomains:
+                                      description: "MinDomains indicates a minimum number of eligible domains. When the number of eligible domains with matching topology keys is less than minDomains, Pod Topology Spread treats \"global minimum\" as 0, and then the calculation of Skew is performed. And when the number of eligible domains with matching topology keys equals or greater than minDomains, this value has no effect on scheduling. As a result, when the number of eligible domains is less than minDomains, scheduler won't schedule more than maxSkew Pods to those domains. If value is nil, the constraint behaves as if MinDomains is equal to 1. Valid values are integers greater than 0. When value is not nil, WhenUnsatisfiable must be DoNotSchedule. \n For example, in a 3-zone cluster, MaxSkew is set to 2, MinDomains is set to 5 and pods with the same labelSelector spread as 2/2/2: | zone1 | zone2 | zone3 | |  P P  |  P P  |  P P  | The number of domains is less than 5(MinDomains), so \"global minimum\" is treated as 0. In this situation, new pod with the same labelSelector cannot be scheduled, because computed skew will be 3(3 - 0) if new Pod is scheduled to any of the three zones, it will violate MaxSkew. \n This is a beta field and requires the MinDomainsInPodTopologySpread feature gate to be enabled (enabled by default)."
+                                      format: int32
+                                      type: integer
+                                    nodeAffinityPolicy:
+                                      description: "NodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector when calculating pod topology spread skew. Options are: - Honor: only nodes matching nodeAffinity/nodeSelector are included in the calculations. - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations. \n If this value is nil, the behavior is equivalent to the Honor policy. This is a beta-level feature default enabled by the NodeInclusionPolicyInPodTopologySpread feature flag."
+                                      type: string
+                                    nodeTaintsPolicy:
+                                      description: "NodeTaintsPolicy indicates how we will treat node taints when calculating pod topology spread skew. Options are: - Honor: nodes without taints, along with tainted nodes for which the incoming pod has a toleration, are included. - Ignore: node taints are ignored. All nodes are included. \n If this value is nil, the behavior is equivalent to the Ignore policy. This is a beta-level feature default enabled by the NodeInclusionPolicyInPodTopologySpread feature flag."
+                                      type: string
+                                    topologyKey:
+                                      description: TopologyKey is the key of node labels. Nodes that have a label with this key and identical values are considered to be in the same topology. We consider each <key, value> as a "bucket", and try to put balanced number of pods into each bucket. We define a domain as a particular instance of a topology. Also, we define an eligible domain as a domain whose nodes meet the requirements of nodeAffinityPolicy and nodeTaintsPolicy. e.g. If TopologyKey is "kubernetes.io/hostname", each Node is a domain of that topology. And, if TopologyKey is "topology.kubernetes.io/zone", each zone is a domain of that topology. It's a required field.
+                                      type: string
+                                    whenUnsatisfiable:
+                                      description: 'WhenUnsatisfiable indicates how to deal with a pod if it doesn''t satisfy the spread constraint. - DoNotSchedule (default) tells the scheduler not to schedule it. - ScheduleAnyway tells the scheduler to schedule the pod in any location, but giving higher precedence to topologies that would help reduce the skew. A constraint is considered "Unsatisfiable" for an incoming pod if and only if every possible node assignment for that pod would violate "MaxSkew" on some topology. For example, in a 3-zone cluster, MaxSkew is set to 1, and pods with the same labelSelector spread as 3/1/1: | zone1 | zone2 | zone3 | | P P P |   P   |   P   | If WhenUnsatisfiable is set to DoNotSchedule, incoming pod can only be scheduled to zone2(zone3) to become 3/2/1(3/1/2) as ActualSkew(2-1) on zone2(zone3) satisfies MaxSkew(1). In other words, the cluster can still be imbalanced, but scheduler won''t make it *more* imbalanced. It''s a required field.'
+                                      type: string
+                                  required:
+                                  - maxSkew
+                                  - topologyKey
+                                  - whenUnsatisfiable
+                                  type: object
+                                type: array
+                            type: object
+                        type: object
+                    type: object
+                type: object
+            type: object
+          status:
+            description: Most recently observed status for the Tigera API server.
+            properties:
+              conditions:
+                description: Conditions represents the latest observed set of conditions for the component. A component may be one or more of Ready, Progressing, Degraded or other customer types.
+                items:
+                  description: "Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, \n type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` \n // other fields }"
+                  properties:
+                    lastTransitionTime:
+                      description: lastTransitionTime is the last time the condition transitioned from one status to another. This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: message is a human readable message indicating details about the transition. This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: observedGeneration represents the .metadata.generation that the condition was set based upon. For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: reason contains a programmatic identifier indicating the reason for the condition's last transition. Producers of specific condition types may define expected values and meanings for this field, and whether the values are considered a guaranteed API. The value should be a CamelCase string. This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase. --- Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be useful (see .node.status.conditions), the ability to deconflict is important. The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              state:
+                description: State provides user-readable status.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+
 ---
-###
-# ```{rubric} Deployment
-# ```
-# ---
-# Source: calico/templates/calico-kube-controllers.yaml
-#
-# See [here](https://github.com/projectcalico/kube-controllers).
-#
-# ```{literalinclude} /crds/calico.yaml
-# :language: yaml
-# :lines: 3673-
-# ```
-apiVersion: apps/v1
-kind: Deployment
+# Source: crds/operator.tigera.io_imagesets_crd.yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
 metadata:
-  name: calico-kube-controllers
-  namespace: kube-system
-  labels:
-    k8s-app: calico-kube-controllers
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.3
+  name: imagesets.operator.tigera.io
 spec:
-  # The controllers can only have a single active instance.
-  replicas: 1
-  selector:
-    matchLabels:
-      k8s-app: calico-kube-controllers
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      name: calico-kube-controllers
-      namespace: kube-system
-      labels:
-        k8s-app: calico-kube-controllers
-    spec:
-      nodeSelector:
-        kubernetes.io/os: linux
-      tolerations:
-      # Mark the pod as a critical add-on for rescheduling.
-      - key: CriticalAddonsOnly
-        operator: Exists
-      - key: node-role.kubernetes.io/master
-        effect: NoSchedule
-      - key: node-role.kubernetes.io/control-plane
-        effect: NoSchedule
-      serviceAccountName: calico-kube-controllers
-      priorityClassName: system-cluster-critical
-      containers:
-      - name: calico-kube-controllers
-        image: docker.io/calico/kube-controllers:v3.28.1
-        imagePullPolicy: IfNotPresent
-        env:
-        # Choose which controllers to run.
-        - name: ENABLED_CONTROLLERS
-          value: node
-        - name: DATASTORE_TYPE
-          value: kubernetes
-        livenessProbe:
-          exec:
-            command:
-            - /usr/bin/check-status
-            - -l
-          periodSeconds: 10
-          initialDelaySeconds: 10
-          failureThreshold: 6
-          timeoutSeconds: 10
-        readinessProbe:
-          exec:
-            command:
-            - /usr/bin/check-status
-            - -r
-          periodSeconds: 10
+  group: operator.tigera.io
+  names:
+    kind: ImageSet
+    listKind: ImageSetList
+    plural: imagesets
+    singular: imageset
+  scope: Cluster
+  versions:
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        description: ImageSet is used to specify image digests for the images that the operator deploys. The name of the ImageSet is expected to be in the format `<variant>-<release>`. The `variant` used is `enterprise` if the InstallationSpec Variant is `TigeraSecureEnterprise` otherwise it is `calico`. The `release` must match the version of the variant that the operator is built to deploy, this version can be obtained by passing the `--version` flag to the operator binary.
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ImageSetSpec defines the desired state of ImageSet.
+            properties:
+              images:
+                description: Images is the list of images to use digests. All images that the operator will deploy must be specified.
+                items:
+                  properties:
+                    digest:
+                      description: Digest is the image identifier that will be used for the Image. The field should not include a leading `@` and must be prefixed with `sha256:`.
+                      type: string
+                    image:
+                      description: Image is an image that the operator deploys and instead of using the built in tag the operator will use the Digest for the image identifier. The value should be the image name without registry or tag or digest. For the image `docker.io/calico/node:v3.17.1` it should be represented as `calico/node`
+                      type: string
+                  required:
+                  - digest
+                  - image
+                  type: object
+                type: array
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
 ---
 # Source: crds/operator.tigera.io_installations_crd.yaml
 apiVersion: apiextensions.k8s.io/v1

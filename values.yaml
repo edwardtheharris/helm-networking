@@ -38,7 +38,11 @@ bgp:
 # ```{rubric} HAProxy
 # ```
 # ---
-# Enable and configure HAProxy.
+# This chart should allow for the configuration of an external HAProxy instance
+# as a load balancer for the cluster.
+#
+# More information about how to do this is available
+# [here](https://upto.site/4c767).
 #
 # ```{literalinclude} /values.yaml
 # :language: yaml
@@ -54,7 +58,7 @@ haproxy:
       type: LoadBalancer
       annotations:
         haproxy.org/standalone-backend: "true"
-        service.beta.kubernetes.io/load-balancer-internal: 192.168.5.40/24
+        service.beta.kubernetes.io/load-balancer-external: 192.168.5.40/24
 
 ###
 # ```{rubric} HAProxy Ingress

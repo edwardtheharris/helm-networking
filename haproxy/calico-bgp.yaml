@@ -1,0 +1,25 @@
+
+apiVersion: projectcalico.org/v3
+kind: BGPConfiguration
+metadata:
+  name: default
+spec:
+  logSeverityScreen: Info
+  nodeToNodeMeshEnabled: true
+---
+# ingress controller server
+apiVersion: projectcalico.org/v3
+kind: BGPPeer
+metadata:
+  name: kcp
+spec:
+  peerIP: 192.168.5.5
+# ingress controller server
+# apiVersion: projectcalico.org/v3
+# kind: BGPPeer
+# metadata:
+#   name: hap02
+# spec:
+#   peerIP: 192.168.5.50
+#   asNumber: 65000
+---
