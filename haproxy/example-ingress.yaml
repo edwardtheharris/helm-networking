@@ -5,7 +5,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: "k8s01.breeze-blocks.net"
+  - host: breeze-blocks.net
     http:
       paths:
       - path: /

@@ -26,10 +26,6 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 5
           successThreshold: 1
-        resources:
-          limits:
-            cpu: 100m
-            memory: 1Gi
 ---
 apiVersion: v1
 kind: Service

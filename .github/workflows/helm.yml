@@ -1,3 +1,14 @@
+###
+# ```{rubric} Helm Chart Tests
+# ```
+# ---
+# This configuration defines setup tests, and lint reports for Helm charts.
+#
+# ```{literalinclude} /.github/workflows/helm.yml
+# :language: yaml
+# :start-at: "name: Test Helm Chart\n"
+# :end-before: "###\n"
+# ```
 name: Test Helm Chart
 on:
   pull_request:
@@ -12,9 +23,10 @@ on:
 ###
 # ```{rubric} Permissions Updates
 # ```
+# ---
 # Enable read for contents and issues, and write for checks and PRs.
 #
-# ```{literalinclude} /.github/workflows/pages.yml
+# ```{literalinclude} /.github/workflows/helm.yml
 # :language: yaml
 # :start-at: "permissions:\n"
 # :end-before: "###\n"
