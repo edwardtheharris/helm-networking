@@ -1,23 +1,15 @@
-{{ if .Values.bgp.enabled }}
 {{- range $.Values.bgp.peers }}
 ---
 apiVersion: crd.projectcalico.org/v1
 kind: BGPPeer
 metadata:
+  annotations:
+    meta.helm.sh/release-name: calico
+    meta.helm.sh/release-namespace: calico-system
+  labels:
+    app.kubernetes.io/name: calico
   name: {{ .name }}
 spec:
-  peerIP: {{ .peerIP }}
   asNumber: {{ .asNumber }}
-  nodeToNodeMeshEnabled: {{ .enableNodeToNodeMesh }}
+  peerIP: {{ .peerIP }}
 {{ end }}
-{{ end }}
----
-apiVersion: crd.projectcalico.org/v1
-kind: BGPConfiguration
-metadata:
-  name: default
-spec:
-  logSeverityScreen: Info
-  nodeToNodeMeshEnabled: true
-  peerIP: 192.168.5.5
-  asNumber: 65000

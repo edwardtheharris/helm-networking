@@ -24,6 +24,7 @@ title: Calico Networking Helm Chart
 ```{toctree}
 :caption: contents
 
+crds/index
 haproxy/index
 tests/index
 ```
